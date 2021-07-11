@@ -13,6 +13,13 @@ const useStyles = makeStyles((theme) => ({
     display: 'flex',
     alignItems: 'center',
     width: "100vw",
+    boxShadow: "0 3px 10px rgb(0 0 0 / 0.2)",
+
+    // For sticky header
+    position: 'fixed',
+    top: 0,
+    backgroundColor: 'white',
+    zIndex: 999
   },
   input: {
     marginLeft: theme.spacing(1),
@@ -31,28 +38,25 @@ export default function SearchPanel(props) {
   const classes = useStyles();
 
   return (
-    <Paper component="form" className={classes.root}>
-      {/* <IconButton className={classes.iconButton} aria-label="menu">
-        <MenuIcon />
-      </IconButton> */}
+    <div component="form" className={classes.root}>
 
       <IconButton className={classes.iconButton} aria-label="menu">
         <YouTubeIcon htmlColor="red" />
       </IconButton>
 
       <InputBase
+        id='yt-query'
         className={classes.input}
         placeholder="Youtube Search"
         inputProps={{ 'aria-label': 'youtube search' }}
         // ref = {props.inputRef}
         onChange = {props.inputRef}
-        onSubmit = {props.keyPressRef}
         onKeyPress = {props.keyPressRef}
       />
       
       <IconButton className={classes.iconButton} aria-label="search" onClick={props.submitRef}>
         <SearchIcon />
       </IconButton>
-    </Paper>
+    </div>
   );
 }

@@ -6,7 +6,7 @@ import SearchPanel from "../components/SearchPanel";
 
 function IndexPanel(props) {
 
-    const APIKEY = 'AIzaSyAMmzD2rr1fpDKlJVoIN3Xx75fykyyprtY';
+    const APIKEY = process.env.REACT_APP_YTAPIKEY;
 
     const [Query, setQuery] = useState('');
     const [videoCards, setVideoCards] =useState([]);
@@ -41,12 +41,15 @@ function IndexPanel(props) {
     }
 
     const InitiateYTSearch = async () => {
-
         try{
-           
             let tempmyList = [];
             // search for videos on Query variable
             await YTSearch(APIKEY, {q:Query, part:'snippet', type:'video'}, (error, result)=>{
+
+                if(error!=null){
+                    alert('Quota Exceeded, try again later !!!')
+                    return;
+                }
 
                 let videos = result.items;
                 videos.forEach(e => {
@@ -109,7 +112,7 @@ function IndexPanel(props) {
                 <button onClick={InitiateYTSearch}>Search</button>
             </div> */}
 
-            <div>
+            <div style={{}}>
                 <SearchPanel 
                     inputRef = {handleQueryChange}
                     keyPressRef = {searchKeyPress}
@@ -118,7 +121,7 @@ function IndexPanel(props) {
             </div>
 
 
-            <div style={{marginTop:"10px"}}>
+            <div style={{paddingTop:"50px"}}>
                 {/* Display Music Cards here */}
                 {videoCards}
             </div>

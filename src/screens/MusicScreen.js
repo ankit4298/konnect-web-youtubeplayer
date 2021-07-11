@@ -2,7 +2,7 @@ import React, {useEffect, useRef, useState} from 'react'
 import AudioPlayer from 'react-h5-audio-player';
 import 'react-h5-audio-player/lib/styles.css';
 
-const MUIC_SERVER_URL = "https://konnect-app-server.herokuapp.com/stream/";
+const MUIC_SERVER_URL = process.env.REACT_APP_MUSIC_SERVER_URL;
 
 export default function MusicScreen(props) {
     var TrackPlayer = useRef();
