@@ -1,12 +1,15 @@
 import React, { useState } from 'react'
 import YTSearch from "youtube-api-v3-search";
+import CardGridView from '../components/CardGridView';
+import MusicCard from "../components/MusicCard"
+import SearchPanel from "../components/SearchPanel";
 
-function IndexPanel() {
+function IndexPanel(props) {
 
     const APIKEY = 'AIzaSyAMmzD2rr1fpDKlJVoIN3Xx75fykyyprtY';
 
     const [Query, setQuery] = useState('');
-    const [responseList, setResponseList] = useState([]);
+    const [videoCards, setVideoCards] =useState([]);
 
     const handleQueryChange = (e) => {
         const { name, value } = e.target;
@@ -18,34 +21,6 @@ function IndexPanel() {
             // initiate YT search for the query
             InitiateYTSearch();
         }
-    }
-
-    const InitiateYTSearch = async () => {
-
-        try{
-           
-            let tempmyList = [];
-            // search for videos on Query variable
-            await YTSearch(APIKEY, {q:'on my way alan walker', part:'snippet', type:'video'}, (error, result)=>{
-
-                let videos = result.items;
-                videos.forEach(e => {
-                    tempmyList.push({
-                        "link": e.id.videoId,
-                        "title": decodeEntities(e.snippet.title),
-                        "thumbnail": e.snippet.thumbnails.medium.url,
-                        "channelName": decodeEntities(e.snippet.channelTitle)
-                    })
-                });
-                console.table(tempmyList);
-
-                // logic to display custom cards to interface 
-            });
-    
-        }catch(e){
-            console.error(e);
-        }
-        
     }
 
     const decodeEntities = (encodedString) => {
@@ -65,22 +40,87 @@ function IndexPanel() {
         });
     }
 
+    const InitiateYTSearch = async () => {
+
+        try{
+           
+            let tempmyList = [];
+            // search for videos on Query variable
+            await YTSearch(APIKEY, {q:Query, part:'snippet', type:'video'}, (error, result)=>{
+
+                let videos = result.items;
+                videos.forEach(e => {
+                    tempmyList.push({
+                        "link": e.id.videoId,
+                        "title": decodeEntities(e.snippet.title),
+                        "thumbnail": e.snippet.thumbnails.medium.url,
+                        "channelName": decodeEntities(e.snippet.channelTitle)
+                    })
+                });
+                console.table(tempmyList);
+
+                // logic to display custom cards to interface 
+                mapListToMusicCards(tempmyList);
+            });
+    
+        }catch(e){
+            console.error(e);
+        }
+        
+    }
+
+    const mapListToMusicCards = (list) =>{
+
+        // setVideoCards(list.map(item=>{
+        //     return <MusicCard
+        //         key={item.link}
+        //         id={item.link}
+        //         name={item.title}
+        //         src={item.thumbnail}
+        //         channelName={item.channelName}
+        //     />
+        // }));
+
+        setVideoCards(
+            ()=>{
+                return <CardGridView list = {list} loadMediaRef={loadMedia} />
+            }
+        );
+
+    }
+
+    const loadMedia = (musicObj) => {
+        // console.log(musicObj);
+        props.mediaChangeRequest(musicObj);
+    }
+
 
     return (
         <div>
-            YT Search :
-            <input
-                type="text"
-                value={Query}
-                onChange={handleQueryChange}
-                onKeyPress={searchKeyPress}
-            />
+            {/* <div>
+                YT Search :
+                <input
+                    type="text"
+                    value={Query}
+                    onChange={handleQueryChange}
+                    onKeyPress={searchKeyPress}
+                />
 
-            <button onClick={InitiateYTSearch}>Search</button>
-
+                <button onClick={InitiateYTSearch}>Search</button>
+            </div> */}
 
             <div>
+                <SearchPanel 
+                    inputRef = {handleQueryChange}
+                    keyPressRef = {searchKeyPress}
+                    submitRef = {InitiateYTSearch}
+                />
+            </div>
+
+
+            <div style={{marginTop:"10px"}}>
                 {/* Display Music Cards here */}
+                {videoCards}
             </div>
 
 
