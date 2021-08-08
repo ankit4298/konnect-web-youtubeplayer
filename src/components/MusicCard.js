@@ -7,8 +7,10 @@ import CardContent from '@material-ui/core/CardContent';
 import CardMedia from '@material-ui/core/CardMedia';
 import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
+import IconButton from '@material-ui/core/IconButton';
 
-import {Auth} from "../services/DBService";
+import PlayCircleOutlineIcon from '@material-ui/icons/PlayCircleOutline';
+
 import PlaylistModal from './PlaylistModal';
 
 const useStyles = makeStyles({
@@ -39,9 +41,7 @@ function MusicCard(props) {
         'playlistID' : props.id,
         'playlistName' : props.videoName
       }
-
       props.loadPlaylist(playlistObj);
-
       return;
     }
 
@@ -52,6 +52,14 @@ function MusicCard(props) {
 
   const getMusicObj = () =>{
     return musicObj;
+  }
+
+  const handleQueuePlaylist = () => {
+    const playlistObj ={
+      'playlistID' : props.id,
+      'playlistName' : props.videoName
+    }
+    props.loadPlaylist(playlistObj, true); // playlist obj & queueStart
   }
 
   return (
@@ -78,8 +86,16 @@ function MusicCard(props) {
           Add to Playlist
         </Button> */}
 
-        {!props.disableAdd ? <PlaylistModal musicObjRef = {getMusicObj}/> : null}
-        
+        {!props.playlistMode ? <PlaylistModal musicObjRef = {getMusicObj}/> : null}
+
+        {
+          props.playlistMode ? 
+          <IconButton className={classes.iconButton} aria-label="queue-playlist" onClick={handleQueuePlaylist}>
+            <PlayCircleOutlineIcon/>
+          </IconButton>
+          : null
+        }
+
 
         {/* <Button size="small" color="primary">
           Learn More

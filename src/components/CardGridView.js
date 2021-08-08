@@ -26,9 +26,9 @@ export default function CardGridView(props) {
         props.loadMediaRef(musicObj);
     }
 
-    const handleloadPlaylist = (playlistObj) => {
+    const handleloadPlaylist = (playlistObj, queueStart=false) => {
       // pass parameters which needs to pass to final IndexPanel component with playlist Obj
-      props.playlistRef(playlistObj);
+      props.playlistRef(playlistObj, queueStart);
   }
 
     // run's on component load
@@ -72,7 +72,7 @@ export default function CardGridView(props) {
                       name={item.playlistname}
                       src={"https://picsum.photos/600/400"}
                       channelName={new Date(Date.parse(item.CreatedDate)).toLocaleString()}
-                      disableAdd={true}
+                      playlistMode={true}
                       playlistCard={true}
                       loadPlaylist={handleloadPlaylist}
                   />

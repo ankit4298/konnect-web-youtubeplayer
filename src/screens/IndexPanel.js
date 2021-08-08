@@ -108,10 +108,22 @@ function IndexPanel(props) {
         }
     }
 
-    const loadPlaylists = async (playlistObj) => {
+    const loadPlaylists = async (playlistObj, queueStart) => {
+
+        // console.log(playlistObj, queueStart);
+        
         try{
             const plistTracks = await getPlaylistByID(playlistObj.playlistID)
 
+            // directly plays from playlist queue
+            if(queueStart){
+                if(plistTracks[0]["data"]!=null){
+                    loadMedia(plistTracks[0]["data"]);
+                }
+                return;
+            }
+
+            // displays cards from playlist
             if(plistTracks[0]["data"]!=null){
                 mapPlaylistMusicToCards(plistTracks[0]["data"]);
             }
