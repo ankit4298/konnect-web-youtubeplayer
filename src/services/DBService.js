@@ -9,17 +9,28 @@ function Auth() {
 async function getAllPlaylistData() {
     const { data, error } = await supabase
         .from('Playlist')
-        .select('playlistname,data,CreatedDate')
+        .select('id,playlistname,data,CreatedDate')
         .eq('userid', Cookies.get('KXUNAME'))
         
-    console.log(data);
+    return data;
 }
 
-async function getPlaylists () {
+async function getPlaylistsIDName () {
+    
     const { data, error } = await supabase
         .from('Playlist')
         .select('id,playlistname')
         .eq('userid', Cookies.get('KXUNAME'))
+    return data;
+}
+
+async function getPlaylistByID(playlistID) {
+    const { data, error } = await supabase
+        .from('Playlist')
+        .select()
+        .eq('userid', Cookies.get('KXUNAME'))
+        .eq('id', playlistID)
+    
     return data;
 }
 
@@ -45,16 +56,6 @@ async function saveToPlaylist (playlistid, musicData) {
 
 
 //#region ------ private Functions
-async function getPlaylistByID(playlistID) {
-    const { data, error } = await supabase
-        .from('Playlist')
-        .select()
-        .eq('userid', Cookies.get('KXUNAME'))
-        .eq('id', playlistID)
-    
-    return data;
-}
-
 async function updatePlaylistByID(playlistID, musicData){
     const { data, error } = await supabase
         .from('Playlist')
@@ -64,4 +65,4 @@ async function updatePlaylistByID(playlistID, musicData){
 
 //#endregion -------------------------
 
-export {Auth, getAllPlaylistData, getPlaylists, saveToPlaylist}
+export {Auth, getAllPlaylistData, getPlaylistsIDName, getPlaylistByID, saveToPlaylist}

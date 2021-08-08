@@ -6,7 +6,7 @@ import Fade from '@material-ui/core/Fade';
 import IconButton from '@material-ui/core/IconButton';
 import PlaylistAddIcon from '@material-ui/icons/PlaylistAdd';
 import Button from '@material-ui/core/Button';
-import {getPlaylists, saveToPlaylist} from '../services/DBService'
+import {getPlaylistsIDName, saveToPlaylist} from '../services/DBService'
 
 const useStyles = makeStyles((theme) => ({
   modal: {
@@ -33,8 +33,8 @@ export default function PlaylistModal(props) {
   const handleOpen = async () => {
     setOpen(true);
 
-    const pl = await getPlaylists();
-    RenderPlaylist(pl);
+    const pl = await getPlaylistsIDName();
+    RenderPlaylistNames(pl);
 
     // const musicData = props.musicObjRef();
     // console.log(musicData);
@@ -55,7 +55,7 @@ export default function PlaylistModal(props) {
   }
 
 
-  const RenderPlaylist = (list) => {
+  const RenderPlaylistNames = (list) => {
 
     setPlaylistCards(list.map(item=>{
         return (

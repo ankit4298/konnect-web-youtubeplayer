@@ -4,7 +4,7 @@ import CardGridView from '../components/CardGridView';
 import MusicCard from "../components/MusicCard"
 import SearchPanel from "../components/SearchPanel";
 
-import {getAllPlaylistData} from "../services/DBService"
+import {getAllPlaylistData, getPlaylistByID} from "../services/DBService"
 
 function IndexPanel(props) {
 
@@ -12,7 +12,6 @@ function IndexPanel(props) {
 
     const [Query, setQuery] = useState('');
     const [videoCards, setVideoCards] =useState([]);
-    const [playlistSection, setPlaylistSection] =useState([]);
 
     const handleQueryChange = (e) => {
         const { name, value } = e.target;
@@ -100,19 +99,43 @@ function IndexPanel(props) {
         props.mediaChangeRequest(musicObj);
     }
 
-    const handleLoadPlaylists = async () => {
+    const handlePlaylistRef = async () => {
         try{
-
             const plist = await getAllPlaylistData()
-
-            let tempmyList = [];
-            // search for videos on Query variable
-            
-            mapListToMusicCards(tempmyList);
-    
+            mapPlaylistsToCards(plist);
         }catch(e){
             console.error(e);
         }
+    }
+
+    const loadPlaylists = async (playlistObj) => {
+        try{
+            const plistTracks = await getPlaylistByID(playlistObj.playlistID)
+            console.log(plistTracks)
+
+            if(plistTracks[0]["data"]!=null){
+                mapPlaylistMusicToCards(plistTracks[0]["data"]);
+            }
+
+        }catch(e){
+            console.error(e);
+        }
+    }
+
+    const mapPlaylistsToCards = (list) => {
+        setVideoCards(
+            ()=>{
+                return <CardGridView playlists = {list} playlistRef={loadPlaylists} />
+            }
+        );
+    }
+
+    const mapPlaylistMusicToCards = (list) => {
+        setVideoCards(
+            ()=>{
+                return <CardGridView playlistTracks = {list} loadMediaRef={loadMedia} />
+            }
+        );
     }
 
     return (
@@ -123,7 +146,7 @@ function IndexPanel(props) {
                     inputRef = {handleQueryChange}
                     keyPressRef = {searchKeyPress}
                     submitRef = {InitiateYTSearch}
-                    playlistRef = {handleLoadPlaylists}
+                    playlistRef = {handlePlaylistRef}
                 />
             </div>
 
@@ -131,11 +154,6 @@ function IndexPanel(props) {
             <div style={{paddingTop:"50px", paddingBottom:"100px"}}>
                 {/* Display Music Cards here */}
                 {videoCards}
-            </div>
-
-            <div style={{paddingTop:"50px", paddingBottom:"100px"}}>
-                {/* Display Music Cards here */}
-                {playlistSection}
             </div>
 
 

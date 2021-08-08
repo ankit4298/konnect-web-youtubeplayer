@@ -32,6 +32,19 @@ function MusicCard(props) {
   }
 
   const handleOnClick = () =>{
+
+    if(props.playlistCard==true){
+      const playlistObj ={
+        'playlistID' : props.id,
+        'playlistName' : props.videoName
+      }
+
+      props.loadPlaylist(playlistObj);
+
+      return;
+    }
+
+    // normal passing paramters, invoke loadMedia prop's value function in CardGridView
     // pass parameters which needs to pass to parent(CardGridView) component
     props.loadMedia(musicObj);
   }
@@ -64,8 +77,8 @@ function MusicCard(props) {
           Add to Playlist
         </Button> */}
 
-        <PlaylistModal musicObjRef = {getMusicObj}/>
-
+        {!props.disableAdd ? <PlaylistModal musicObjRef = {getMusicObj}/> : null}
+        
 
         {/* <Button size="small" color="primary">
           Learn More
