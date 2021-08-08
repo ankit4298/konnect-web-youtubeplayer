@@ -4,12 +4,15 @@ import CardGridView from '../components/CardGridView';
 import MusicCard from "../components/MusicCard"
 import SearchPanel from "../components/SearchPanel";
 
+import {getAllPlaylistData} from "../services/DBService"
+
 function IndexPanel(props) {
 
     const APIKEY = process.env.REACT_APP_YTAPIKEY;
 
     const [Query, setQuery] = useState('');
     const [videoCards, setVideoCards] =useState([]);
+    const [playlistSection, setPlaylistSection] =useState([]);
 
     const handleQueryChange = (e) => {
         const { name, value } = e.target;
@@ -97,33 +100,42 @@ function IndexPanel(props) {
         props.mediaChangeRequest(musicObj);
     }
 
+    const handleLoadPlaylists = async () => {
+        try{
+
+            const plist = await getAllPlaylistData()
+
+            let tempmyList = [];
+            // search for videos on Query variable
+            
+            mapListToMusicCards(tempmyList);
+    
+        }catch(e){
+            console.error(e);
+        }
+    }
 
     return (
         <div>
-            {/* <div>
-                YT Search :
-                <input
-                    type="text"
-                    value={Query}
-                    onChange={handleQueryChange}
-                    onKeyPress={searchKeyPress}
-                />
-
-                <button onClick={InitiateYTSearch}>Search</button>
-            </div> */}
 
             <div style={{}}>
                 <SearchPanel 
                     inputRef = {handleQueryChange}
                     keyPressRef = {searchKeyPress}
                     submitRef = {InitiateYTSearch}
+                    playlistRef = {handleLoadPlaylists}
                 />
             </div>
 
 
-            <div style={{paddingTop:"50px"}}>
+            <div style={{paddingTop:"50px", paddingBottom:"100px"}}>
                 {/* Display Music Cards here */}
                 {videoCards}
+            </div>
+
+            <div style={{paddingTop:"50px", paddingBottom:"100px"}}>
+                {/* Display Music Cards here */}
+                {playlistSection}
             </div>
 
 

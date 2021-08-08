@@ -8,9 +8,12 @@ import CardMedia from '@material-ui/core/CardMedia';
 import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
 
+import {Auth} from "../services/DBService";
+import PlaylistModal from './PlaylistModal';
+
 const useStyles = makeStyles({
   root: {
-    maxWidth: 345,
+    // maxWidth: 345,
     minHeight: 300
   },
   media: {
@@ -33,9 +36,13 @@ function MusicCard(props) {
     props.loadMedia(musicObj);
   }
 
+  const getMusicObj = () =>{
+    return musicObj;
+  }
+
   return (
-    <Card className={classes.root} onClick={handleOnClick}>
-      <CardActionArea>
+    <Card className={classes.root}>
+      <CardActionArea onClick={handleOnClick}>
         <CardMedia
           className={classes.media}
           image={musicObj.imageSrc}
@@ -52,14 +59,18 @@ function MusicCard(props) {
         
       </CardActionArea>
 
-      {/* <CardActions>
-        <Button size="small" color="primary">
-          Share
-        </Button>
-        <Button size="small" color="primary">
+      <CardActions>
+        {/* <Button size="small" color="primary" onClick = {handleAddToPlaylist}>
+          Add to Playlist
+        </Button> */}
+
+        <PlaylistModal musicObjRef = {getMusicObj}/>
+
+
+        {/* <Button size="small" color="primary">
           Learn More
-        </Button>
-      </CardActions> */}
+        </Button> */}
+      </CardActions>
 
     </Card>
   );
