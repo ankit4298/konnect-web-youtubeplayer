@@ -33,6 +33,7 @@ function MusicCard(props) {
 
   const handleOnClick = () =>{
 
+    // sending playlisy props to CardView -> Index
     if(props.playlistCard==true){
       const playlistObj ={
         'playlistID' : props.id,

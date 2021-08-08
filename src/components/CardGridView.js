@@ -71,7 +71,7 @@ export default function CardGridView(props) {
                       id={item.id}
                       name={item.playlistname}
                       src={"https://picsum.photos/600/400"}
-                      channelName={item.playlistname}
+                      channelName={new Date(Date.parse(item.CreatedDate)).toLocaleString()}
                       disableAdd={true}
                       playlistCard={true}
                       loadPlaylist={handleloadPlaylist}

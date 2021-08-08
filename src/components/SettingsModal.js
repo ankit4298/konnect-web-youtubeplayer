@@ -48,6 +48,7 @@ export default function SettingsModal() {
 
   const handleSave = () => {
     Cookies.set('KXUNAME', username);
+    Cookies.set('KXUCHANGE', '1'); // setting user has changed
     setOpen(false);
   }
 

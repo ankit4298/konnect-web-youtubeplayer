@@ -3,25 +3,34 @@ import Cookies from 'js-cookie';
 const supabase = createClient(process.env.REACT_APP_SUPABASE_URL, process.env.REACT_APP_SUPABASE_KEY);
 
 function Auth() {
+    // TODO: add supabase auth
     console.log('AUTH connected');
 }
 
-async function getAllPlaylistData() {
-    const { data, error } = await supabase
-        .from('Playlist')
-        .select('id,playlistname,data,CreatedDate')
-        .eq('userid', Cookies.get('KXUNAME'))
-        
-    return data;
-}
-
 async function getPlaylistsIDName () {
-    
-    const { data, error } = await supabase
+    // console.log('Cache DEBUG:: ', Cookies.get('KXCACHE_PLAYLIST_LOAD') != "10-4", Cookies.get('KXUCHANGE') != "0");
+
+    // caching for performance 
+    // saving playlist id, name for 10 minutes and fetching from localstorage
+    if(Cookies.get('KXCACHE_PLAYLIST_LOAD') != "10-4" || Cookies.get('KXUCHANGE') != "0"){   
+        console.log('setting cache');
+        const { data, error } = await supabase
         .from('Playlist')
-        .select('id,playlistname')
+        .select('id,playlistname,CreatedDate')
         .eq('userid', Cookies.get('KXUNAME'))
-    return data;
+
+        Cookies.set('KXCACHE_PLAYLIST_LOAD', "10-4", { expires: 0.007, path: '' }); //cookie set for 10 mins
+        Cookies.set('KXUCHANGE', "0"); // setting same user logged in
+        localStorage.setItem('KXCACHE_PLAYLIST_LOAD', JSON.stringify(data));
+
+        return data;
+    }
+    else{
+        console.log('from cache');
+        const data = localStorage.getItem('KXCACHE_PLAYLIST_LOAD');
+        // console.log(JSON.parse(data))
+        return JSON.parse(data);
+    }
 }
 
 async function getPlaylistByID(playlistID) {
@@ -65,4 +74,4 @@ async function updatePlaylistByID(playlistID, musicData){
 
 //#endregion -------------------------
 
-export {Auth, getAllPlaylistData, getPlaylistsIDName, getPlaylistByID, saveToPlaylist}
+export {Auth, getPlaylistsIDName, getPlaylistByID, saveToPlaylist}

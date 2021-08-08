@@ -4,7 +4,7 @@ import CardGridView from '../components/CardGridView';
 import MusicCard from "../components/MusicCard"
 import SearchPanel from "../components/SearchPanel";
 
-import {getAllPlaylistData, getPlaylistByID} from "../services/DBService"
+import {getPlaylistsIDName, getPlaylistByID} from "../services/DBService"
 
 function IndexPanel(props) {
 
@@ -101,7 +101,7 @@ function IndexPanel(props) {
 
     const handlePlaylistRef = async () => {
         try{
-            const plist = await getAllPlaylistData()
+            const plist = await getPlaylistsIDName()
             mapPlaylistsToCards(plist);
         }catch(e){
             console.error(e);
@@ -111,10 +111,13 @@ function IndexPanel(props) {
     const loadPlaylists = async (playlistObj) => {
         try{
             const plistTracks = await getPlaylistByID(playlistObj.playlistID)
-            console.log(plistTracks)
 
             if(plistTracks[0]["data"]!=null){
                 mapPlaylistMusicToCards(plistTracks[0]["data"]);
+            }
+            else{
+                // playlist empty
+                console.log('empty playlist');
             }
 
         }catch(e){
