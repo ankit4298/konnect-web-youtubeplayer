@@ -68,7 +68,7 @@ function MusicCard(props) {
         <CardMedia
           className={classes.media}
           image={musicObj.imageSrc}
-          title={musicObj.videoID}
+          // title={musicObj.videoID}
         />
         <CardContent>
           <Typography gutterBottom variant="h6" component="h2">
