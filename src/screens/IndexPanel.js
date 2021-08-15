@@ -1,7 +1,6 @@
 import React, { useState } from 'react'
 import YTSearch from "youtube-api-v3-search";
 import CardGridView from '../components/CardGridView';
-import MusicCard from "../components/MusicCard"
 import SearchPanel from "../components/SearchPanel";
 
 import {getPlaylistsIDName, getPlaylistByID} from "../services/DBService"
@@ -43,6 +42,11 @@ function IndexPanel(props) {
     }
 
     const InitiateYTSearch = async () => {
+
+        if(Query == null || Query == ''){
+            return;
+        }
+
         try{
             let tempmyList = [];
             // search for videos on Query variable
@@ -125,7 +129,7 @@ function IndexPanel(props) {
 
             // displays cards from playlist
             if(plistTracks[0]["data"]!=null){
-                mapPlaylistMusicToCards(plistTracks[0]["data"]);
+                mapPlaylistMusicToCards(plistTracks[0]["data"], playlistObj);
             }
             else{
                 // playlist empty
@@ -137,6 +141,7 @@ function IndexPanel(props) {
         }
     }
 
+    // displayes playlists as cards
     const mapPlaylistsToCards = (list) => {
         setVideoCards(
             ()=>{
@@ -145,10 +150,16 @@ function IndexPanel(props) {
         );
     }
 
-    const mapPlaylistMusicToCards = (list) => {
+    // displays individual tracks of playlist as cards
+    const mapPlaylistMusicToCards = (list, playlistObj) => {
         setVideoCards(
             ()=>{
-                return <CardGridView playlistTracks = {list} loadMediaRef={loadMedia} />
+                return <CardGridView 
+                            playlistTracks = {list}
+                            playlistObj = {playlistObj}
+                            loadMediaRef={loadMedia}
+                            playlistRef={loadPlaylists}
+                        />
             }
         );
     }

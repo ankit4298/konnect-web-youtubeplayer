@@ -35,11 +35,12 @@ function MusicCard(props) {
 
   const handleOnClick = () =>{
 
-    // sending playlisy props to CardView -> Index
+    // sending playlist props to CardView -> Index
     if(props.playlistCard==true){
       const playlistObj ={
         'playlistID' : props.id,
-        'playlistName' : props.videoName
+        'playlistName' : props.name,
+        'playlistSrc' : props.src
       }
       props.loadPlaylist(playlistObj);
       return;
@@ -57,7 +58,8 @@ function MusicCard(props) {
   const handleQueuePlaylist = () => {
     const playlistObj ={
       'playlistID' : props.id,
-      'playlistName' : props.videoName
+      'playlistName' : props.name,
+      'playlistSrc' : props.src
     }
     props.loadPlaylist(playlistObj, true); // playlist obj & queueStart
   }

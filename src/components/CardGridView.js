@@ -4,6 +4,7 @@ import React,{useEffect, useState} from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
 import MusicCard from './MusicCard'
+import PlaylistHeaderView from './PlaylistHeaderView'
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -19,7 +20,7 @@ export default function CardGridView(props) {
   const classes = useStyles();
 
     const [cardList, setCardList] = useState([]);
-
+    const [playListHeaderObj, setPlayListHeaderObj] = useState([]);
 
     const handleloadMedia = (musicObj) => {
         // pass parameters which needs to pass to final IndexPanel component with music Obj
@@ -89,6 +90,10 @@ export default function CardGridView(props) {
         return;
       }
 
+      // set selected playlist header view card object
+      setPlayListHeaderObj(props.playlistObj)
+
+      // set tracks card from playlist
       setCardList(props.playlistTracks.map(item=>{
           return (
               <Grid item xs={12} sm={6} md={3} lg={3} key={item.videoID}>
@@ -103,12 +108,16 @@ export default function CardGridView(props) {
               </Grid>
           )
       }));
-    }, [props.playlistTracks])
-
+    }, [props.playlistTracks, props.playlistObj])
 
   return (
     <div>
-
+      {
+        props.playlistObj === undefined ? null :
+          <Grid style={{padding: '10px'}}>
+              <PlaylistHeaderView playlistObj = {playListHeaderObj} loadPlaylist={handleloadPlaylist} />
+          </Grid>
+      }
         <Grid
         container
         spacing={2}
