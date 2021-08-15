@@ -10,6 +10,7 @@ import Typography from '@material-ui/core/Typography';
 import IconButton from '@material-ui/core/IconButton';
 
 import PlayCircleOutlineIcon from '@material-ui/icons/PlayCircleOutline';
+import DeleteForeverIcon from '@material-ui/icons/DeleteForever';
 
 import PlaylistModal from './PlaylistModal';
 
@@ -64,6 +65,23 @@ function MusicCard(props) {
     props.loadPlaylist(playlistObj, true); // playlist obj & queueStart
   }
 
+  const handleRemoveFromPlaylist = () => {
+    const musicPlaylistObj = {
+      'track': {
+        'videoID' : props.id,
+        'videoName' : props.name,
+        'channelName' : props.channelName,
+        'imageSrc' : props.src,
+      },
+      'playlist': {
+        'playlistID' : props.playlistObj.playlistID,
+        'playlistName' : props.playlistObj.playlistName,
+        'playlistSrc' : props.playlistObj.playlistSrc
+      }
+    }
+    props.removeTrackFromPlaylist(musicPlaylistObj);
+  }
+
   return (
     <Card className={classes.root}>
       <CardActionArea onClick={handleOnClick}>
@@ -92,10 +110,20 @@ function MusicCard(props) {
 
         {
           props.playlistMode ? 
-          <IconButton className={classes.iconButton} aria-label="queue-playlist" onClick={handleQueuePlaylist}>
-            <PlayCircleOutlineIcon/>
-          </IconButton>
-          : null
+            <IconButton className={classes.iconButton} aria-label="queue-playlist" onClick={handleQueuePlaylist}>
+              <PlayCircleOutlineIcon/>
+            </IconButton>
+          : 
+          null
+        }
+
+        {
+          props.playlistTrack ?
+            <IconButton className={classes.iconButton} aria-label="queue-playlist" onClick={handleRemoveFromPlaylist}>
+              <DeleteForeverIcon/>
+            </IconButton>
+          :
+          null
         }
 
 

@@ -70,6 +70,23 @@ async function createPlaylist (username, playlistName) {
     }
 }
 
+async function removeFromPlaylistByID (playlistID, videoID) {
+    // fetch full playlist
+    const fullPlist = await getPlaylistByID(playlistID);
+    
+    // new list
+    const newList = removeFromJSONArray(fullPlist[0]["data"], videoID);
+
+    // update list into DB
+    const data = await updatePlaylistByID(playlistID, newList);
+    if(data != null) {
+        console.log('Removed from playlist');
+        return true;
+    }else{
+        return false;
+    }
+}
+
 
 //#region ------ private Functions
 async function updatePlaylistByID(playlistID, musicData){
@@ -77,18 +94,38 @@ async function updatePlaylistByID(playlistID, musicData){
         .from('Playlist')
         .update({ data : musicData, 'ModifiedDate':new Date() })
         .eq('id', playlistID)
+
+    return data;
 }
 
 async function insertIntoPlaylistTable(username, playlistName){
     const { data, error } = await supabase
         .from('Playlist')
         .insert([
-            { playlistname: playlistName, userid: username },
+            { playlistname: playlistName, userid: username, data:[] },
         ]);
     
     return data;
 }
 
+function removeFromJSONArray(obj, videoID) {
+    let temp=obj;
+    let vidx = -99;
+
+    obj.forEach((e, i) => {
+        if(e.videoID == videoID) {
+            vidx=i;
+        }
+    });
+
+    if(vidx != -99 || vidx != -1) {
+        temp.splice(vidx, 1)
+    }
+
+    return temp;
+}
+
+
 //#endregion -------------------------
 
-export {Auth, getPlaylistsIDName, getPlaylistByID, saveToPlaylist, createPlaylist}
+export {Auth, getPlaylistsIDName, getPlaylistByID, saveToPlaylist, createPlaylist, removeFromPlaylistByID}

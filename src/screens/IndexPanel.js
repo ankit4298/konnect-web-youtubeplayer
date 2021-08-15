@@ -141,7 +141,7 @@ function IndexPanel(props) {
         }
     }
 
-    // displayes playlists as cards
+    // displays playlists as cards
     const mapPlaylistsToCards = (list) => {
         setVideoCards(
             ()=>{

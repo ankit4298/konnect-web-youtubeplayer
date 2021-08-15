@@ -6,6 +6,8 @@ import Grid from '@material-ui/core/Grid';
 import MusicCard from './MusicCard'
 import PlaylistHeaderView from './PlaylistHeaderView'
 
+import {removeFromPlaylistByID} from "../services/DBService"
+
 const useStyles = makeStyles((theme) => ({
   root: {
     flexGrow: 1,
@@ -29,8 +31,9 @@ export default function CardGridView(props) {
 
     const handleloadPlaylist = (playlistObj, queueStart=false) => {
       // pass parameters which needs to pass to final IndexPanel component with playlist Obj
+      // runs playlistRef prop's function from IndexPanel
       props.playlistRef(playlistObj, queueStart);
-  }
+    }
 
     // run's on component load
     // useEffect for loading YT Query cards
@@ -104,11 +107,35 @@ export default function CardGridView(props) {
                       src={item.imageSrc}
                       channelName={item.channelName}
                       loadMedia={handleloadMedia}
+                      playlistTrack={true}
+                      playlistObj={props.playlistObj}
+                      removeTrackFromPlaylist={handleRemoveTrackFromPlaylist}
                   />
               </Grid>
           )
       }));
     }, [props.playlistTracks, props.playlistObj])
+
+
+    const handleRemoveTrackFromPlaylist = async (musicPlaylistObj) => {
+
+      let _trackObj = musicPlaylistObj.track;
+      let _playlistObj = musicPlaylistObj.playlist;
+
+      try{
+        const data = await removeFromPlaylistByID(_playlistObj.playlistID, _trackObj.videoID);
+        
+        if(data) {
+          // refresh view
+          props.playlistRef(_playlistObj, false);
+        }else{
+          console.log('Something went wrong !!!');
+        }
+      }catch(e){
+        console.log(e);
+      }
+
+    }
 
   return (
     <div>
