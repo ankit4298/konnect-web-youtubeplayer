@@ -63,7 +63,7 @@ async function createPlaylist (username, playlistName) {
     const data = await insertIntoPlaylistTable(username, playlistName)
     if(data != null){
         console.log('Playlist created successfully')
-        Cookies.set('KXUCHANGE', '1'); // setting new playlist added
+        Cookies.set('KXUCHANGE', '1'); // refresh cache as new playlist is created
         return true;
     }else{
         return false;
@@ -81,6 +81,18 @@ async function removeFromPlaylistByID (playlistID, videoID) {
     const data = await updatePlaylistByID(playlistID, newList);
     if(data != null) {
         console.log('Removed from playlist');
+        return true;
+    }else{
+        return false;
+    }
+}
+
+async function removePlaylistByID(playlistID) {
+    const username = Cookies.get('KXUNAME');
+    const error = await deletePlaylistByID(playlistID, username);
+    if(error==null) {
+        console.log('Playlist deleted successfully')
+        Cookies.set('KXUCHANGE', '1'); // refresh cache as playlist is deleted
         return true;
     }else{
         return false;
@@ -108,6 +120,16 @@ async function insertIntoPlaylistTable(username, playlistName){
     return data;
 }
 
+async function deletePlaylistByID(playlistID, username){
+    const { data, error } = await supabase
+        .from('Playlist')
+        .delete()
+        .eq('id', playlistID)
+        .eq('userid', username);
+    
+    return error;
+}
+
 function removeFromJSONArray(obj, videoID) {
     let temp=obj;
     let vidx = -99;
@@ -128,4 +150,12 @@ function removeFromJSONArray(obj, videoID) {
 
 //#endregion -------------------------
 
-export {Auth, getPlaylistsIDName, getPlaylistByID, saveToPlaylist, createPlaylist, removeFromPlaylistByID}
+export {
+    Auth,
+    getPlaylistsIDName,
+    getPlaylistByID,
+    saveToPlaylist,
+    createPlaylist,
+    removeFromPlaylistByID,
+    removePlaylistByID
+}

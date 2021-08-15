@@ -121,7 +121,8 @@ function IndexPanel(props) {
 
             // directly plays from playlist queue
             if(queueStart){
-                if(plistTracks[0]["data"]!=null){
+                // added check to not start playing when playlist is empty
+                if(plistTracks[0]["data"] != null && plistTracks[0]["data"][0] !== undefined){
                     loadMedia(plistTracks[0]["data"]);
                 }
                 return;

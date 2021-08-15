@@ -7,6 +7,10 @@ import IconButton from '@material-ui/core/IconButton';
 import Typography from '@material-ui/core/Typography';
 import PlayArrowIcon from '@material-ui/icons/PlayArrow';
 
+import RemoveCircleOutlineIcon from '@material-ui/icons/RemoveCircleOutline';
+import AlertDialog from './Dialog';
+
+import {removePlaylistByID} from '../services/DBService';
 const useStyles = makeStyles((theme) => ({
     root: {
       display: 'flex',
@@ -38,6 +42,7 @@ function PlaylistHeaderView(props) {
     const theme = useTheme();
 
     const [header, setHeader] = useState([]);
+    const [dialogState, setDialogState] = useState(false);
 
     // fires when playlisy object props changes
     useEffect(()=>{
@@ -51,12 +56,33 @@ function PlaylistHeaderView(props) {
     },[props.playlistObj])
 
     const handleQueuePlaylist = () => {
-        const playlistObj ={
-          'playlistID' : header.playlistID,
-          'playlistName' : header.playlistName,
-          'playlistSrc' : header.playlistSrc
-        }
-        props.loadPlaylist(playlistObj, true); // playlist obj & queueStart
+      const playlistObj ={
+        'playlistID' : header.playlistID,
+        'playlistName' : header.playlistName,
+        'playlistSrc' : header.playlistSrc
+      }
+      props.loadPlaylist(playlistObj, true); // playlist obj & queueStart
+    }
+
+    const handleDeletePlaylist = () => {
+      setDialogState(true);
+    }
+
+    const handleDialogClose = () => {
+      setDialogState(false);
+    }
+
+    // delete playlist
+    const dialogRemovePress = () => {
+      const status = removePlaylistByID(header.playlistID);
+      if(status){
+        alert('Playlist deleted successfully.');
+        // refresh view
+        // TODO: refresh view after deletion of playlist
+        handleDialogClose();
+      }else{
+        console.error('something went wrong!!!');
+      }
     }
 
     return (
@@ -78,11 +104,31 @@ function PlaylistHeaderView(props) {
                 </Typography> */}
                 </CardContent>
                 <div className={classes.controls}>
-                <IconButton aria-label="play/pause" onClick={handleQueuePlaylist}>
+                <IconButton aria-label="play/pause" onClick={handleQueuePlaylist} title="Play">
                     <PlayArrowIcon className={classes.playIcon} />
+                </IconButton>
+
+                <IconButton aria-label="play/pause" onClick={handleDeletePlaylist} title="Delete Playlist">
+                    <RemoveCircleOutlineIcon className={classes.playIcon} />
                 </IconButton>
                 </div>
             </div>
+
+            <AlertDialog
+              openModal={dialogState}
+              ModalClosed={handleDialogClose}
+
+              headerText={"Delete Playlist ?"}
+              content={"Are you sure you want to delete "+header.playlistName+" playlist. All the contents of playlist will be lost and can't be recovered."}
+
+              positiveButtonText={"Delete"}
+              negativeButtonText={"Cancel"}
+
+              positiveAction={dialogRemovePress}
+              negativeAction={handleDialogClose}
+
+            />
+
         </Card>
     )
 }
