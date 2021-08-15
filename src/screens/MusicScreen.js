@@ -147,8 +147,6 @@ export default function MusicScreen(props) {
                 onEnded={onTrackEnded}
                 onClickNext={onClickNext}
                 onClickPrevious={onClickPrevious}
-
-                onSeeked={(e)=>{console.log(e.timeStamp)}}
             />
             </div>
         </div>
