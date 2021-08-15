@@ -48,19 +48,26 @@ async function saveToPlaylist (playlistid, musicData) {
     musicData["AddedDate"] = new Date();
 
     const plist = await getPlaylistByID(playlistid);
-
     let plistData = plist[0]["data"];
-
 
     if(plistData == null){
         plistData = [];
     }
 
     plistData.push(musicData); // append new track to existing playlist
-    
     await updatePlaylistByID(playlistid ,plistData);
-
     console.log('Saved to playlist')
+}
+
+async function createPlaylist (username, playlistName) {
+    const data = await insertIntoPlaylistTable(username, playlistName)
+    if(data != null){
+        console.log('Playlist created successfully')
+        Cookies.set('KXUCHANGE', '1'); // setting new playlist added
+        return true;
+    }else{
+        return false;
+    }
 }
 
 
@@ -72,6 +79,16 @@ async function updatePlaylistByID(playlistID, musicData){
         .eq('id', playlistID)
 }
 
+async function insertIntoPlaylistTable(username, playlistName){
+    const { data, error } = await supabase
+        .from('Playlist')
+        .insert([
+            { playlistname: playlistName, userid: username },
+        ]);
+    
+    return data;
+}
+
 //#endregion -------------------------
 
-export {Auth, getPlaylistsIDName, getPlaylistByID, saveToPlaylist}
+export {Auth, getPlaylistsIDName, getPlaylistByID, saveToPlaylist, createPlaylist}

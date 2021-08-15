@@ -3,10 +3,10 @@ import { makeStyles } from '@material-ui/core/styles';
 import InputBase from '@material-ui/core/InputBase';
 import IconButton from '@material-ui/core/IconButton';
 import SearchIcon from '@material-ui/icons/Search';
-import YouTubeIcon from '@material-ui/icons/YouTube';
 import PlaylistAddCheckIcon from '@material-ui/icons/PlaylistAddCheck';
 
 import SettingsModal from './SettingsModal';
+import MenuModal from './MenuModal';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -41,9 +41,7 @@ export default function SearchPanel(props) {
   return (
     <div component="form" className={classes.root}>
 
-      <IconButton className={classes.iconButton} aria-label="menu">
-        <YouTubeIcon htmlColor="red" />
-      </IconButton>
+      <MenuModal />
 
       <InputBase
         id='yt-query'

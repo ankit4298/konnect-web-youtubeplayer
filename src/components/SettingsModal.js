@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect,useState} from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Modal from '@material-ui/core/Modal';
 import Backdrop from '@material-ui/core/Backdrop';
@@ -18,7 +18,6 @@ const useStyles = makeStyles((theme) => ({
   },
   paper: {
     backgroundColor: theme.palette.background.paper,
-    border: '2px solid #000',
     boxShadow: theme.shadows[5],
     padding: theme.spacing(2, 4, 3),
     minHeight: "20%",
@@ -26,12 +25,23 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function SettingsModal() {
+export default function SettingsModal(props) {
   const classes = useStyles();
   const [open, setOpen] = useState(false);
 
-
   const [username, setUsername] = useState(Cookies.get('KXUNAME'));
+
+  useEffect(() => {
+    
+    if(props == null){
+        return
+    }
+
+    if(props.openModal == true){
+        handleOpen();
+    }
+    
+}, [props.openModal])
 
   const handleOpen = () => {
     setOpen(true);
@@ -39,6 +49,7 @@ export default function SettingsModal() {
 
   const handleClose = () => {
     setOpen(false);
+    props.ModalClosed();
   };
 
   const handleTextchange = (e) => {
@@ -47,16 +58,24 @@ export default function SettingsModal() {
   }
 
   const handleSave = () => {
+
+    if(username == '' || username == null) {
+      alert('Please enter valid username !!!');
+      return;
+    }
+
     Cookies.set('KXUNAME', username);
     Cookies.set('KXUCHANGE', '1'); // setting user has changed
     setOpen(false);
+    props.ModalClosed();
   }
+
 
   return (
     <div>
-    <IconButton className={classes.iconButton} aria-label="search" onClick={handleOpen}>
+    {/* <IconButton className={classes.iconButton} aria-label="search" onClick={handleOpen}>
         <SettingsIcon/>
-    </IconButton>
+    </IconButton> */}
 
       <Modal
         aria-labelledby="transition-modal-title"
@@ -72,7 +91,7 @@ export default function SettingsModal() {
       >
         <Fade in={open}>
           <div className={classes.paper}>
-            <h2 id="transition-modal-title">KonnectX Username</h2>
+            <h2 id="transition-modal-title">KonnectX Account</h2>
             <p id="transition-modal-description">
                 <TextField id="standard-basic" label="Username" value={username} onChange={handleTextchange} />
             </p>
