@@ -1,9 +1,18 @@
 import React, {useEffect, useRef, useState} from 'react'
-import AudioPlayer from 'react-h5-audio-player';
+import AudioPlayer, {RHAP_UI} from 'react-h5-audio-player';
 import 'react-h5-audio-player/lib/styles.css';
 import * as QueueService from "../services/QueueService";
 
+import NowPlayingModal from '../components/NowPlayingModal';
+
 const MUIC_SERVER_URL = process.env.REACT_APP_MUSIC_SERVER_URL;
+
+/** Music Object
+    videoID	    "youtube video ID"
+    videoName	"video name"
+    channelName	"channel name"
+    imageSrc	"youtube thumnail image url"
+ */
 
 export default function MusicScreen(props) {
     var TrackPlayer = useRef();
@@ -45,7 +54,7 @@ export default function MusicScreen(props) {
 
     //MediaSessionAPI useEffect
     useEffect(()=>{
-
+        
         if(currentTrack == null){
             return;
         }
@@ -147,6 +156,13 @@ export default function MusicScreen(props) {
                 onEnded={onTrackEnded}
                 onClickNext={onClickNext}
                 onClickPrevious={onClickPrevious}
+
+                customAdditionalControls={
+                    [
+                        RHAP_UI.LOOP,
+                        <NowPlayingModal currentTrack = {currentTrack}/>
+                    ]
+                }
             />
             </div>
         </div>
