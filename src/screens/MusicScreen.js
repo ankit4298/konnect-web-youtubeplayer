@@ -4,6 +4,7 @@ import 'react-h5-audio-player/lib/styles.css';
 import * as QueueService from "../services/QueueService";
 
 import NowPlayingModal from '../components/NowPlayingModal';
+import PlayingQueue from '../components/PlayingQueue';
 
 const MUIC_SERVER_URL = process.env.REACT_APP_MUSIC_SERVER_URL;
 
@@ -165,6 +166,8 @@ export default function MusicScreen(props) {
                 }
             />
             </div>
+
+            <PlayingQueue queueList = {globalList} currentTrack={currentTrack}/>
         </div>
     )
 }
