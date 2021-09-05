@@ -11,6 +11,7 @@ import RemoveCircleOutlineIcon from '@material-ui/icons/RemoveCircleOutline';
 import AlertDialog from './Dialog';
 
 import {removePlaylistByID} from '../services/DBService';
+import ContainerView from './DnD/ContainerView';
 const useStyles = makeStyles((theme) => ({
     root: {
       display: 'flex',
@@ -31,10 +32,10 @@ const useStyles = makeStyles((theme) => ({
       paddingLeft: theme.spacing(1),
       paddingBottom: theme.spacing(1),
     },
-    playIcon: {
+    Icon: {
       height: 38,
       width: 38,
-    },
+    }
   }));
 
 function PlaylistHeaderView(props) {
@@ -105,12 +106,15 @@ function PlaylistHeaderView(props) {
                 </CardContent>
                 <div className={classes.controls}>
                 <IconButton aria-label="play/pause" onClick={handleQueuePlaylist} title="Play">
-                    <PlayArrowIcon className={classes.playIcon} />
+                    <PlayArrowIcon className={classes.Icon} />
                 </IconButton>
 
-                <IconButton aria-label="play/pause" onClick={handleDeletePlaylist} title="Delete Playlist">
-                    <RemoveCircleOutlineIcon className={classes.playIcon} />
+                <ContainerView musicObj={props.musicObj} playlistObj={props.playlistObj} />
+
+                <IconButton aria-label="delete playlist" onClick={handleDeletePlaylist} title="Delete Playlist">
+                    <RemoveCircleOutlineIcon style={{color:'#ee0000'}} className={classes.Icon} />
                 </IconButton>
+
                 </div>
             </div>
 

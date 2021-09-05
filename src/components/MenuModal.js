@@ -98,7 +98,7 @@ export default function MenuModal(props) {
                   <MenuList autoFocusItem={open} id="menu-list-grow" onKeyDown={handleListKeyDown}>
                     <MenuItem onClick={handleCreatePlaylistModal}>Create Playlist</MenuItem>
                     <MenuItem onClick={handleSettingsModal}>My Account</MenuItem>
-                    <MenuItem style={{cursor:'default'}}>v2021.8.22</MenuItem>
+                    <MenuItem style={{cursor:'default', color:'blue'}}>v{process.env.REACT_APP_VERSION}</MenuItem>
                   </MenuList>
                 </ClickAwayListener>
               </Paper>
