@@ -23,6 +23,7 @@ export default function CardGridView(props) {
 
     const [cardList, setCardList] = useState([]);
     const [playListHeaderObj, setPlayListHeaderObj] = useState([]);
+    const [musicObj, setMusicObj] = useState([]);
 
     const handleloadMedia = (musicObj) => {
         // pass parameters which needs to pass to final IndexPanel component with music Obj
@@ -95,6 +96,7 @@ export default function CardGridView(props) {
 
       // set selected playlist header view card object
       setPlayListHeaderObj(props.playlistObj)
+      setMusicObj(props.playlistTracks)
 
       // set tracks card from playlist
       setCardList(props.playlistTracks.map(item=>{
@@ -139,24 +141,25 @@ export default function CardGridView(props) {
 
   return (
     <div>
-      {
-        props.playlistObj === undefined ? null :
-          <Grid style={{padding: '10px'}}>
-              <PlaylistHeaderView playlistObj = {playListHeaderObj} loadPlaylist={handleloadPlaylist} />
-          </Grid>
-      }
-        <Grid
+      {props.playlistObj === undefined ? null : (
+        <Grid style={{ padding: "10px" }}>
+          <PlaylistHeaderView
+            musicObj={musicObj}
+            playlistObj={playListHeaderObj}
+            loadPlaylist={handleloadPlaylist}
+          />
+        </Grid>
+      )}
+      <Grid
         container
         spacing={2}
         direction="row"
         alignItems="flex-start"
         justifyContent="flex-start"
         // style={{ minHeight: '100vh' }}
-        >
-            {cardList}
-        </Grid>
-
-        
+      >
+        {cardList}
+      </Grid>
     </div>
   );
 }

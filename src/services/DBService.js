@@ -99,8 +99,6 @@ async function removePlaylistByID(playlistID) {
     }
 }
 
-
-//#region ------ private Functions
 async function updatePlaylistByID(playlistID, musicData){
     const { data, error } = await supabase
         .from('Playlist')
@@ -109,6 +107,9 @@ async function updatePlaylistByID(playlistID, musicData){
 
     return data;
 }
+
+
+//#region ------ private Functions
 
 async function insertIntoPlaylistTable(username, playlistName){
     const { data, error } = await supabase
@@ -157,5 +158,6 @@ export {
     saveToPlaylist,
     createPlaylist,
     removeFromPlaylistByID,
-    removePlaylistByID
+    removePlaylistByID,
+    updatePlaylistByID
 }
