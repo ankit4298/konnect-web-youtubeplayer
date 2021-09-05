@@ -8,6 +8,8 @@ import PlaylistAddCheckIcon from '@material-ui/icons/PlaylistAddCheck';
 import SettingsModal from './SettingsModal';
 import MenuModal from './MenuModal';
 
+import {getLyrics, getLyricsAx, getLyricsOth} from '../services/LyricsService'
+
 const useStyles = makeStyles((theme) => ({
   root: {
     // padding: '2px 4px',
@@ -62,6 +64,14 @@ export default function SearchPanel(props) {
       <IconButton className={classes.iconButton} aria-label="search" onClick={props.submitRef}>
         <SearchIcon />
       </IconButton>
+
+      <IconButton className={classes.iconButton} aria-label="search" onClick={()=>{
+        console.log('lyrics hit')
+        getLyricsOth();
+      }}>
+        <SearchIcon />
+      </IconButton>
+
     </div>
   );
 }
