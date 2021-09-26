@@ -1,4 +1,4 @@
-import React, {useEffect, useState } from 'react'
+import React, {useEffect, useState, useContext } from 'react'
 import { makeStyles, useTheme } from '@material-ui/core/styles';
 import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
@@ -12,6 +12,10 @@ import AlertDialog from './Dialog';
 
 import {removePlaylistByID} from '../services/DBService';
 import ContainerView from './DnD/ContainerView';
+
+import PlaylistContext from '../context/playlist/PlaylistContext';
+import AlertContext from '../context/playlist/AlertContext';
+
 const useStyles = makeStyles((theme) => ({
     root: {
       display: 'flex',
@@ -44,6 +48,10 @@ function PlaylistHeaderView(props) {
 
     const [header, setHeader] = useState([]);
     const [dialogState, setDialogState] = useState(false);
+    
+    
+    const plistContext = useContext(PlaylistContext);
+    const {ctxAlert,setCtxAlert} = useContext(AlertContext);
 
     // fires when playlisy object props changes
     useEffect(()=>{
@@ -74,12 +82,20 @@ function PlaylistHeaderView(props) {
     }
 
     // delete playlist
-    const dialogRemovePress = () => {
-      const status = removePlaylistByID(header.playlistID);
+    const dialogRemovePress = async () => {
+      const status = await removePlaylistByID(header.playlistID);
       if(status){
-        alert('Playlist deleted successfully.');
-        // refresh view
-        // TODO: refresh view after deletion of playlist
+        //alert('Playlist deleted successfully.');
+
+        setCtxAlert({
+          alert: true,
+          message:'Playlist Deleted successfully !!!'
+        })
+  
+        // refresh view after deleting playlist
+        plistContext.setCtxRefDelPlaylist(true);
+
+
         handleDialogClose();
       }else{
         console.error('something went wrong!!!');

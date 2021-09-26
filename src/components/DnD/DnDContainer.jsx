@@ -1,7 +1,9 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import Card from "./DnDCard";
 import update from "immutability-helper";
 import { updatePlaylistByID } from "../../services/DBService";
+
+import AlertContext from '../../context/playlist/AlertContext';
 
 const style = {
   width: 400,
@@ -9,6 +11,8 @@ const style = {
 
 export default function DnDContainer(props) {
   const [cards, setCards] = useState([]);
+
+  const {ctxAlert,setCtxAlert} = useContext(AlertContext);
 
   useEffect(() => {
     if (props.musicObj == null && props.musicObj.length == 0) {
@@ -47,7 +51,13 @@ export default function DnDContainer(props) {
 
     if (result != null) {
       console.log("Updated Playlist");
-      alert("Playlist updated successfully !!!");
+
+      setCtxAlert({
+        alert: true,
+        message:'Playlist updated successfully !!!'
+      })
+
+      props.SaveCompleted();
     } else {
       console.error("Error while updating Playlist !!!");
     }

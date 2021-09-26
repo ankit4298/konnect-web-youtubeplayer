@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import Button from "@material-ui/core/Button";
 import Dialog from "@material-ui/core/Dialog";
@@ -13,6 +13,8 @@ import ReactDOM from "react-dom";
 import DnDContainer from "./DnDContainer";
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
+
+import PlaylistContext from '../../context/playlist/PlaylistContext';
 
 const useStyles = makeStyles((theme) => ({
   Icon: {
@@ -30,6 +32,8 @@ export default function ContainerView(props) {
   const [playlistObj, setPlaylistObj] = useState(null);
 
   const [savePlaylist, setSavePlaylist] = useState(null);
+
+  const {ctxRefreshPlaylist,setCtxRefreshPlaylist,ctxRefDelPlaylist,setCtxRefDelPlaylist} = useContext(PlaylistContext);
 
   useEffect(() => {
     if (props.musicObj == null && props.musicObj.length == 0) {
@@ -71,6 +75,16 @@ export default function ContainerView(props) {
     handleClose();
   };
 
+  // reset savePlaylist variable to null for not overriding save everytime reorder is press after already saving 1 time
+  const handleSaveComplete = () => {
+    const _playlistObj = playlistObj;
+    
+    setSavePlaylist(null);
+
+    // set refresh playlist context to true and rerender playlist tracks in IndexPanel.js
+    setCtxRefreshPlaylist(_playlistObj);
+  }
+
   return (
     <div>
       <IconButton
@@ -98,7 +112,7 @@ export default function ContainerView(props) {
           >
             <DndProvider backend={HTML5Backend}>
               {/* sends playlist obj onSave*/}
-              <DnDContainer musicObj={musicObj} onPlaylistSave={savePlaylist} />
+              <DnDContainer musicObj={musicObj} onPlaylistSave={savePlaylist} SaveCompleted={handleSaveComplete} />
             </DndProvider>
           </DialogContentText>
         </DialogContent>

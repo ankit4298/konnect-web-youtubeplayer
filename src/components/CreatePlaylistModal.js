@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useState, useContext} from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Modal from '@material-ui/core/Modal';
 import Backdrop from '@material-ui/core/Backdrop';
@@ -9,6 +9,9 @@ import Button from '@material-ui/core/Button';
 import Cookies from 'js-cookie';
 
 import {createPlaylist} from '../services/DBService'
+
+import AlertContext from '../context/playlist/AlertContext';
+
 const useStyles = makeStyles((theme) => ({
   modal: {
     display: 'flex',
@@ -30,6 +33,8 @@ export default function CreatePlaylistModal(props) {
 
     const [username, setUsername] = useState(Cookies.get('KXUNAME'));
     const [playlistName, setPlaylistName] = useState('');
+
+    const {ctxAlert,setCtxAlert} = useContext(AlertContext);
 
     useEffect(()=>{
         setUsername(Cookies.get('KXUNAME'));
@@ -65,18 +70,33 @@ export default function CreatePlaylistModal(props) {
         try{
 
             if(username == null || username == '') {
-                alert('Please enter username from My Account !!!');
+                // alert('Please enter username from My Account !!!');
+                
+                setCtxAlert({
+                    alert: true,
+                    message:'Please enter username from My Account !!!'
+                })
                 return;
             }
 
             if(playlistName == '' || playlistName == null){
-                alert('Please enter valid Playlist name !!!');
+                // alert('Please enter valid Playlist name !!!');
+                
+                setCtxAlert({
+                    alert: true,
+                    message:'Please enter valid Playlist name !!!'
+                })
                 return;
             }
 
             const data = createPlaylist(username, playlistName);
             if(data){
-                alert('Playlist Created successfully');
+                // alert('Playlist Created successfully');
+                
+                setCtxAlert({
+                    alert: true,
+                    message:'Playlist Created successfully !!!'
+                })
             }
 
             setOpen(false);

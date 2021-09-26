@@ -1,16 +1,41 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect, useContext } from 'react'
 import YTSearch from "youtube-api-v3-search";
 import CardGridView from '../components/CardGridView';
 import SearchPanel from "../components/SearchPanel";
 
-import {getPlaylistsIDName, getPlaylistByID} from "../services/DBService"
+import {getPlaylistsIDName, getPlaylistByID} from "../services/DBService";
+
+import PlaylistContext from '../context/playlist/PlaylistContext';
 
 function IndexPanel(props) {
 
     const APIKEY = process.env.REACT_APP_YTAPIKEY;
 
+    const {ctxRefreshPlaylist,setCtxRefreshPlaylist,ctxRefDelPlaylist,setCtxRefDelPlaylist} = useContext(PlaylistContext);
+
     const [Query, setQuery] = useState('');
     const [videoCards, setVideoCards] =useState([]);
+
+    useEffect(() => {
+        if(ctxRefreshPlaylist == null){
+            return;
+        }
+
+        loadPlaylists(ctxRefreshPlaylist, false);
+
+        // set refresh to null after reorder displayed is completed
+        setCtxRefreshPlaylist(null);
+    }, [ctxRefreshPlaylist])
+
+    useEffect(()=>{
+        if(ctxRefDelPlaylist == null){
+            return;
+        }
+        handlePlaylistRef();
+        
+        // set playlist view refresh to null after playlist view is displayed again
+        setCtxRefDelPlaylist(null);
+    },[ctxRefDelPlaylist])
 
     const handleQueryChange = (e) => {
         const { name, value } = e.target;

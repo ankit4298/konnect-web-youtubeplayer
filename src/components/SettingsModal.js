@@ -1,4 +1,4 @@
-import React, {useEffect,useState} from 'react';
+import React, {useEffect,useState,useContext} from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Modal from '@material-ui/core/Modal';
 import Backdrop from '@material-ui/core/Backdrop';
@@ -9,6 +9,8 @@ import SaveIcon from '@material-ui/icons/Save';
 import { TextField } from '@material-ui/core';
 import Button from '@material-ui/core/Button';
 import Cookies from 'js-cookie';
+
+import AlertContext from '../context/playlist/AlertContext';
 
 const useStyles = makeStyles((theme) => ({
   modal: {
@@ -30,6 +32,8 @@ export default function SettingsModal(props) {
   const [open, setOpen] = useState(false);
 
   const [username, setUsername] = useState(Cookies.get('KXUNAME'));
+
+  const {ctxAlert,setCtxAlert} = useContext(AlertContext);
 
   useEffect(() => {
     
@@ -60,7 +64,12 @@ export default function SettingsModal(props) {
   const handleSave = () => {
 
     if(username == '' || username == null) {
-      alert('Please enter valid username !!!');
+      // alert('Please enter valid username !!!');
+
+      setCtxAlert({
+        alert: true,
+        message:'Please enter valid username !!!'
+      })
       return;
     }
 

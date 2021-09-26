@@ -1,45 +1,51 @@
-import React,{useEffect,useState} from 'react';
-import Button from '@material-ui/core/Button';
+import React,{useEffect,useState, useContext} from 'react';
 import Snackbar from '@material-ui/core/Snackbar';
-import IconButton from '@material-ui/core/IconButton';
-import CloseIcon from '@material-ui/icons/Close';
 
-export default function SnackBar(props) {
+import AlertContext from '../context/playlist/AlertContext';
+
+export default function SnackBar() {
   const [open, setOpen] = useState(false);
 
+  const {ctxAlert,setCtxAlert} = useContext(AlertContext);
+
   useEffect(()=>{
-    console.log('inside effect')
-    if(props.snackMessage==null){
+    if(ctxAlert.alert==null){
       return;
     }
-    setOpen(true);
-  },[props.snackMessage])
+
+    handleOpen();
+
+  },[ctxAlert])
 
 
-  const handleClick = () => {
+  const handleOpen = () => {
     setOpen(true);
+
+    //after displaying alert again set alert context variable to null
+    setCtxAlert({
+      alert:null,
+      message:ctxAlert.message
+    });
   };
 
   const handleClose = (event, reason) => {
     if (reason === 'clickaway') {
       return;
     }
-
     setOpen(false);
   };
 
   return (
     <div>
-      {/* <Button onClick={handleClick}>Open simple snackbar</Button> */}
       <Snackbar
         anchorOrigin={{
           vertical: 'bottom',
           horizontal: 'left',
         }}
         open={open}
-        autoHideDuration={2000}
+        autoHideDuration={3000}
         onClose={handleClose}
-        message={props.snackMessage}
+        message={ctxAlert.message}
       />
     </div>
   );
