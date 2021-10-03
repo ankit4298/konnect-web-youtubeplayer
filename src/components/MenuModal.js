@@ -11,6 +11,8 @@ import MenuList from '@material-ui/core/MenuList';
 
 import CreatePlaylistModal from './CreatePlaylistModal'
 import SettingsModal from './SettingsModal'
+
+import {signOutUser} from '../services/firebaseServices'
 const useStyles = makeStyles((theme) => ({
   root: {
     display: 'flex',
@@ -73,6 +75,10 @@ export default function MenuModal(props) {
     setOpenSettingsModal(false);
   }
 
+  const handleSignOut = () => {
+    signOutUser();
+  }
+
   return (
     <div component="form" className={classes.root}>
 
@@ -98,6 +104,7 @@ export default function MenuModal(props) {
                   <MenuList autoFocusItem={open} id="menu-list-grow" onKeyDown={handleListKeyDown}>
                     <MenuItem onClick={handleCreatePlaylistModal}>Create Playlist</MenuItem>
                     <MenuItem onClick={handleSettingsModal}>My Account</MenuItem>
+                    <MenuItem onClick={handleSignOut}>Sign Out</MenuItem>
                     <MenuItem style={{cursor:'default', color:'blue'}}>v{process.env.REACT_APP_VERSION}</MenuItem>
                   </MenuList>
                 </ClickAwayListener>

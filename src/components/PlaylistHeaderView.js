@@ -13,8 +13,8 @@ import AlertDialog from './Dialog';
 import {removePlaylistByID} from '../services/DBService';
 import ContainerView from './DnD/ContainerView';
 
-import PlaylistContext from '../context/playlist/PlaylistContext';
-import AlertContext from '../context/playlist/AlertContext';
+import PlaylistContext from '../context/PlaylistContext';
+import AlertContext from '../context/AlertContext';
 
 const useStyles = makeStyles((theme) => ({
     root: {

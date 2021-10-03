@@ -10,7 +10,7 @@ import { TextField } from '@material-ui/core';
 import Button from '@material-ui/core/Button';
 import Cookies from 'js-cookie';
 
-import AlertContext from '../context/playlist/AlertContext';
+import AlertContext from '../context/AlertContext';
 
 const useStyles = makeStyles((theme) => ({
   modal: {

@@ -3,7 +3,7 @@ import Card from "./DnDCard";
 import update from "immutability-helper";
 import { updatePlaylistByID } from "../../services/DBService";
 
-import AlertContext from '../../context/playlist/AlertContext';
+import AlertContext from '../../context/AlertContext';
 
 const style = {
   width: 400,

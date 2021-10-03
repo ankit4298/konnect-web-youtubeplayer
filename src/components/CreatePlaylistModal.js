@@ -10,7 +10,7 @@ import Cookies from 'js-cookie';
 
 import {createPlaylist} from '../services/DBService'
 
-import AlertContext from '../context/playlist/AlertContext';
+import AlertContext from '../context/AlertContext';
 
 const useStyles = makeStyles((theme) => ({
   modal: {
