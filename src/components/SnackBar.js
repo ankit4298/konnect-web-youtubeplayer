@@ -1,7 +1,7 @@
 import React,{useEffect,useState, useContext} from 'react';
 import Snackbar from '@material-ui/core/Snackbar';
 
-import AlertContext from '../context/playlist/AlertContext';
+import AlertContext from '../context/AlertContext';
 
 export default function SnackBar() {
   const [open, setOpen] = useState(false);

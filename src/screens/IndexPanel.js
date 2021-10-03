@@ -5,7 +5,7 @@ import SearchPanel from "../components/SearchPanel";
 
 import {getPlaylistsIDName, getPlaylistByID} from "../services/DBService";
 
-import PlaylistContext from '../context/playlist/PlaylistContext';
+import PlaylistContext from '../context/PlaylistContext';
 
 function IndexPanel(props) {
 

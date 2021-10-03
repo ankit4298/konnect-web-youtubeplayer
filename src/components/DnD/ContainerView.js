@@ -14,7 +14,7 @@ import DnDContainer from "./DnDContainer";
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
 
-import PlaylistContext from '../../context/playlist/PlaylistContext';
+import PlaylistContext from '../../context/PlaylistContext';
 
 const useStyles = makeStyles((theme) => ({
   Icon: {

@@ -10,7 +10,8 @@ import Cookies from 'js-cookie';
 
 import {createPlaylist} from '../services/DBService'
 
-import AlertContext from '../context/playlist/AlertContext';
+import AlertContext from '../context/AlertContext';
+import UserContext from '../context/UserContext';
 
 const useStyles = makeStyles((theme) => ({
   modal: {
@@ -31,14 +32,17 @@ export default function CreatePlaylistModal(props) {
     const classes = useStyles();
     const [open, setOpen] = useState(false);
 
-    const [username, setUsername] = useState(Cookies.get('KXUNAME'));
-    const [playlistName, setPlaylistName] = useState('');
-
+    
     const {ctxAlert,setCtxAlert} = useContext(AlertContext);
-
+    const userContext = useContext(UserContext);
+    
+    const [playlistName, setPlaylistName] = useState('');
+    const [username, setUsername] = useState(null);
     useEffect(()=>{
-        setUsername(Cookies.get('KXUNAME'));
-    },[Cookies.get('KXUNAME')])
+        if(userContext != null && userContext.ctxFirebaseUser != null){
+            setUsername(userContext.ctxFirebaseUser.uid);
+        }
+    },[userContext])
 
     useEffect(() => {
         if(props == null){
