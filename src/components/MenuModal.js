@@ -105,7 +105,7 @@ export default function MenuModal(props) {
                     <MenuItem onClick={handleCreatePlaylistModal}>Create Playlist</MenuItem>
                     <MenuItem onClick={handleSettingsModal}>My Account</MenuItem>
                     <MenuItem onClick={handleSignOut}>Sign Out</MenuItem>
-                    <MenuItem style={{cursor:'default', color:'blue'}}>v{process.env.REACT_APP_VERSION}</MenuItem>
+                    <MenuItem style={{cursor:'default', color:'#0e62be'}}>v{process.env.REACT_APP_VERSION}</MenuItem>
                   </MenuList>
                 </ClickAwayListener>
               </Paper>

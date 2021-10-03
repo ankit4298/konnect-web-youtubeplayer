@@ -1,51 +1,60 @@
-import React, {useEffect,useState,useContext} from 'react';
-import { makeStyles } from '@material-ui/core/styles';
-import Modal from '@material-ui/core/Modal';
-import Backdrop from '@material-ui/core/Backdrop';
-import Fade from '@material-ui/core/Fade';
-import IconButton from '@material-ui/core/IconButton';
-import SettingsIcon from '@material-ui/icons/Settings';
-import SaveIcon from '@material-ui/icons/Save';
-import { TextField } from '@material-ui/core';
-import Button from '@material-ui/core/Button';
-import Cookies from 'js-cookie';
+import React, { useEffect, useState, useContext } from "react";
+import { makeStyles } from "@material-ui/core/styles";
+import Modal from "@material-ui/core/Modal";
+import Backdrop from "@material-ui/core/Backdrop";
+import Fade from "@material-ui/core/Fade";
+import IconButton from "@material-ui/core/IconButton";
+import SettingsIcon from "@material-ui/icons/Settings";
+import SaveIcon from "@material-ui/icons/Save";
+import { TextField } from "@material-ui/core";
+import Button from "@material-ui/core/Button";
+import Cookies from "js-cookie";
 
-import AlertContext from '../context/AlertContext';
+import AlertContext from "../context/AlertContext";
+import UserContext from "../context/UserContext";
 
 const useStyles = makeStyles((theme) => ({
   modal: {
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
   },
   paper: {
     backgroundColor: theme.palette.background.paper,
     boxShadow: theme.shadows[5],
     padding: theme.spacing(2, 4, 3),
     minHeight: "20%",
-    minWidth: "30%"
+    minWidth: "30%",
   },
+  header: {
+    color: '#0e62be'
+  }
 }));
 
 export default function SettingsModal(props) {
   const classes = useStyles();
   const [open, setOpen] = useState(false);
 
-  const [username, setUsername] = useState(Cookies.get('KXUNAME'));
+  const { ctxAlert, setCtxAlert } = useContext(AlertContext);
+  const userContext = useContext(UserContext);
 
-  const {ctxAlert,setCtxAlert} = useContext(AlertContext);
+  const [userInfo, setUserInfo] = useState(null);
 
   useEffect(() => {
-    
-    if(props == null){
-        return
+    if(userContext != null && userContext.ctxFirebaseUser != null){
+      setUserInfo(userContext.ctxFirebaseUser)
+    }
+  }, [userContext]);
+
+  useEffect(() => {
+    if (props == null) {
+      return;
     }
 
-    if(props.openModal == true){
-        handleOpen();
+    if (props.openModal == true) {
+      handleOpen();
     }
-    
-}, [props.openModal])
+  }, [props.openModal]);
 
   const handleOpen = () => {
     setOpen(true);
@@ -56,36 +65,8 @@ export default function SettingsModal(props) {
     props.ModalClosed();
   };
 
-  const handleTextchange = (e) => {
-    const { name, value } = e.target;
-    setUsername(value.trim());
-  }
-
-  const handleSave = () => {
-
-    if(username == '' || username == null) {
-      // alert('Please enter valid username !!!');
-
-      setCtxAlert({
-        alert: true,
-        message:'Please enter valid username !!!'
-      })
-      return;
-    }
-
-    Cookies.set('KXUNAME', username);
-    Cookies.set('KXUCHANGE', '1'); // setting user has changed
-    setOpen(false);
-    props.ModalClosed();
-  }
-
-
   return (
     <div>
-    {/* <IconButton className={classes.iconButton} aria-label="search" onClick={handleOpen}>
-        <SettingsIcon/>
-    </IconButton> */}
-
       <Modal
         aria-labelledby="transition-modal-title"
         aria-describedby="transition-modal-description"
@@ -100,24 +81,17 @@ export default function SettingsModal(props) {
       >
         <Fade in={open}>
           <div className={classes.paper}>
-            <h2 id="transition-modal-title">KonnectX Account</h2>
+            <h2 id="transition-modal-title" className={classes.header}>Konnect Account</h2>
             <p id="transition-modal-description">
-                <TextField id="standard-basic" label="Username" value={username} onChange={handleTextchange} />
+              <p>
+                <b>Name:</b> {userInfo !=null ? userInfo.displayName : null}
+              </p>
+              <p>
+                <b>Email:</b> {userInfo !=null ? userInfo.email : null}
+              </p>
             </p>
-            <p>
-                <Button
-                    variant="contained"
-                    color="primary"
-                    className={classes.button}
-                    startIcon={<SaveIcon />}
-                    onClick={handleSave}
-                >
-                    Save
-                </Button>
-            </p>
-            <p>
-              ** Playlist will be saved/fetched based on the username
-            </p>
+
+            <p>** Playlist will be saved/fetched based on the account</p>
           </div>
         </Fade>
       </Modal>

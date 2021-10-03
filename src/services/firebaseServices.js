@@ -28,11 +28,15 @@ async function signInUser(uname, password) {
 async function signOutUser() {
   await signOut(auth)
     .then(() => {
-      return { user: "signedout", error: null };
+        returnModal.user = 'User Signed out';
+        returnModal.error = null;
     })
     .catch((error) => {
-      return { user: null, error: error };
+        returnModal.user = null;
+        returnModal.error = error;
     });
+    
+    return returnModal;
 }
 
 export { signInUser, signOutUser };
