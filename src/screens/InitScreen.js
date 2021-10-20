@@ -20,6 +20,8 @@ export default function InitScreen() {
   const [ctxRefreshPlaylist, setCtxRefreshPlaylist] = useState(null);
   const [ctxRefDelPlaylist, setCtxRefDelPlaylist] = useState(null);
 
+  const [ctxQueue, setCtxQueue] = useState(null);
+
   const [ctxAlert, setCtxAlert] = useState({
     alert: null,
     message: null,
@@ -56,10 +58,9 @@ export default function InitScreen() {
         {alreadySignedIn == true ? (
           <PlaylistContext.Provider
             value={{
-              ctxRefreshPlaylist,
-              setCtxRefreshPlaylist,
-              ctxRefDelPlaylist,
-              setCtxRefDelPlaylist,
+              ctxRefreshPlaylist, setCtxRefreshPlaylist,
+              ctxRefDelPlaylist, setCtxRefDelPlaylist,
+              ctxQueue, setCtxQueue
             }}
           >
             <AlertContext.Provider value={{ ctxAlert, setCtxAlert }}>

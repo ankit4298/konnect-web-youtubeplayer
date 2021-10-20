@@ -75,7 +75,7 @@ export default function PlaylistModal(props) {
 
   return (
     <div>
-    <IconButton className={classes.iconButton} aria-label="search" onClick={handleOpen}>
+    <IconButton className={classes.iconButton} aria-label="search" onClick={handleOpen} title="Add to Playlist">
         <PlaylistAddIcon/>
     </IconButton>
 

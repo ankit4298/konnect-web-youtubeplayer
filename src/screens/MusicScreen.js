@@ -1,10 +1,12 @@
-import React, {useEffect, useRef, useState} from 'react'
+import React, {useEffect, useRef, useState, useContext} from 'react'
 import AudioPlayer, {RHAP_UI} from 'react-h5-audio-player';
 import 'react-h5-audio-player/lib/styles.css';
 import * as QueueService from "../services/QueueService";
 
 import NowPlayingModal from '../components/NowPlayingModal';
 import PlayingQueue from '../components/PlayingQueue';
+
+import PlaylistContext from '../context/PlaylistContext';
 
 const MUIC_SERVER_URL = process.env.REACT_APP_MUSIC_SERVER_URL;
 
@@ -21,17 +23,18 @@ export default function MusicScreen(props) {
     const [musicURL, setMusicURL] = useState(null);
 
     var [globalList, setGlobalList] = useState(null);
-    var [pointer, setPointer] = useState(-1);
+    var [pointer, setPointer] = useState(0);
     var [currentTrack, setCurrentTrack] = useState(null);
 
     const { mediaSession } = navigator;
+    
+    const plistContext = useContext(PlaylistContext);
 
     // fires when props.musicObj is changed
     useEffect(()=>{
         if(props.musicObj != null) {
             // normalize queue object
             const _obj = QueueService.normalizeObject(props.musicObj);
-            globalList = _obj;
             pointer = 0;
 
             setGlobalList(_obj);
@@ -93,6 +96,33 @@ export default function MusicScreen(props) {
             mediaSession.metadata = null;
           };
     },[currentTrack]);
+
+
+    // playlist queue Context useEffect
+    useEffect(() => {
+
+        if(plistContext.ctxQueue != null){
+
+            let _obj = null;
+            if(globalList == null){
+                _obj = QueueService.AddToQueue(globalList, plistContext.ctxQueue);
+                setGlobalList(_obj)
+            }else{
+                _obj = plistContext.ctxQueue;
+                setGlobalList(globalList=>[...globalList, _obj]);
+
+                // setGlobalList is used in 2 useEffects which will runs on same react cycle, for more info read below
+                // setGlobalList(_obj) // will not work -- https://stackoverflow.com/questions/53715465/can-i-set-state-inside-a-useeffect-hook#
+            }
+
+        }else{
+            return;
+        }
+
+        return () => {
+            plistContext.setCtxQueue(null);
+        }
+    }, [plistContext.ctxQueue])
 
 
     const playTrack = (track) => {
