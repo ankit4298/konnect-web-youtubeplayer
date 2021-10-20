@@ -41,5 +41,17 @@ function playPrevious(list, pointer){
     }
 }
 
+function AddToQueue(list, newTrack){
 
-export {normalizeObject, musicDispatcher, playNext, playPrevious}
+    let _list = list;
+    console.log(_list)
+    if(_list!=null){
+        _list.push(newTrack);
+    }else{
+        _list = [];
+        _list.push(newTrack);
+    }
+    return _list;
+}
+
+export {normalizeObject, musicDispatcher, playNext, playPrevious, AddToQueue}

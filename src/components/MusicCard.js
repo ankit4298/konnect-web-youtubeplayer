@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Card from '@material-ui/core/Card';
 import CardActionArea from '@material-ui/core/CardActionArea';
@@ -11,8 +11,11 @@ import IconButton from '@material-ui/core/IconButton';
 
 import PlayCircleOutlineIcon from '@material-ui/icons/PlayCircleOutline';
 import DeleteForeverIcon from '@material-ui/icons/DeleteForever';
+import QueueMusicIcon from '@material-ui/icons/QueueMusic';
 
 import PlaylistModal from './PlaylistModal';
+
+import PlaylistContext from '../context/PlaylistContext';
 
 const useStyles = makeStyles({
   root: {
@@ -26,6 +29,8 @@ const useStyles = makeStyles({
 
 function MusicCard(props) {
   const classes = useStyles();
+  
+  const plistContext = useContext(PlaylistContext);
 
   const musicObj = {
     'videoID' : props.id,
@@ -82,6 +87,13 @@ function MusicCard(props) {
     props.removeTrackFromPlaylist(musicPlaylistObj);
   }
 
+  const handleAddToQueue = () => {
+    var _track = getMusicObj();
+
+    // setting queue tarck in playlist context - queue
+    plistContext.setCtxQueue(_track);
+  }
+
   return (
     <Card className={classes.root}>
       <CardActionArea onClick={handleOnClick}>
@@ -106,25 +118,37 @@ function MusicCard(props) {
           Add to Playlist
         </Button> */}
 
+        {/* Add to playlist */}
         {!props.playlistMode ? <PlaylistModal musicObjRef = {getMusicObj}/> : null}
 
+        {/* Add to playlist */}
+        {!props.playlistMode ? 
+          <IconButton className={classes.iconButton} aria-label="queue-track" onClick={handleAddToQueue} title="Add to Queue">
+            <QueueMusicIcon/>
+          </IconButton>
+        : null}
+
+        {/* Quick play all playlist tracks */}
         {
           props.playlistMode ? 
-            <IconButton className={classes.iconButton} aria-label="queue-playlist" onClick={handleQueuePlaylist}>
+            <IconButton className={classes.iconButton} aria-label="queue-playlist" onClick={handleQueuePlaylist} title="Quick Play">
               <PlayCircleOutlineIcon/>
             </IconButton>
           : 
           null
         }
 
+        {/* Delete from playlist track */}
         {
           props.playlistTrack ?
-            <IconButton className={classes.iconButton} aria-label="queue-playlist" onClick={handleRemoveFromPlaylist}>
+            <IconButton className={classes.iconButton} aria-label="queue-playlist" onClick={handleRemoveFromPlaylist} title="Delete from Playlist">
               <DeleteForeverIcon/>
             </IconButton>
           :
           null
         }
+
+
 
 
         {/* <Button size="small" color="primary">

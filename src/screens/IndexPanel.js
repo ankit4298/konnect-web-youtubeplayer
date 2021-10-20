@@ -11,31 +11,31 @@ function IndexPanel(props) {
 
     const APIKEY = process.env.REACT_APP_YTAPIKEY;
 
-    const {ctxRefreshPlaylist,setCtxRefreshPlaylist,ctxRefDelPlaylist,setCtxRefDelPlaylist} = useContext(PlaylistContext);
+    const plistContext = useContext(PlaylistContext);
 
     const [Query, setQuery] = useState('');
     const [videoCards, setVideoCards] =useState([]);
 
     useEffect(() => {
-        if(ctxRefreshPlaylist == null){
+        if(plistContext.ctxRefreshPlaylist == null){
             return;
         }
 
-        loadPlaylists(ctxRefreshPlaylist, false);
+        loadPlaylists(plistContext.ctxRefreshPlaylist, false);
 
         // set refresh to null after reorder displayed is completed
-        setCtxRefreshPlaylist(null);
-    }, [ctxRefreshPlaylist])
+        plistContext.setCtxRefreshPlaylist(null);
+    }, [plistContext.ctxRefreshPlaylist])
 
     useEffect(()=>{
-        if(ctxRefDelPlaylist == null){
+        if(plistContext.ctxRefDelPlaylist == null){
             return;
         }
         handlePlaylistRef();
         
         // set playlist view refresh to null after playlist view is displayed again
-        setCtxRefDelPlaylist(null);
-    },[ctxRefDelPlaylist])
+        plistContext.setCtxRefDelPlaylist(null);
+    },[plistContext.ctxRefDelPlaylist])
 
     const handleQueryChange = (e) => {
         const { name, value } = e.target;

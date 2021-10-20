@@ -33,7 +33,7 @@ export default function ContainerView(props) {
 
   const [savePlaylist, setSavePlaylist] = useState(null);
 
-  const {ctxRefreshPlaylist,setCtxRefreshPlaylist,ctxRefDelPlaylist,setCtxRefDelPlaylist} = useContext(PlaylistContext);
+  const plistContext = useContext(PlaylistContext);
 
   useEffect(() => {
     if (props.musicObj == null && props.musicObj.length == 0) {
@@ -82,7 +82,7 @@ export default function ContainerView(props) {
     setSavePlaylist(null);
 
     // set refresh playlist context to true and rerender playlist tracks in IndexPanel.js
-    setCtxRefreshPlaylist(_playlistObj);
+    plistContext.setCtxRefreshPlaylist(_playlistObj);
   }
 
   return (
