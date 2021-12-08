@@ -39,6 +39,7 @@ export default function CardGridView(props) {
     // run's on component load
     // useEffect for loading YT Query cards
     useEffect(() => {
+        window.scrollTo(0,0);
 
         if(props.list == null){
           return;
@@ -63,6 +64,7 @@ export default function CardGridView(props) {
 
     // useEffect for loading playlists
     useEffect(() => {
+      window.scrollTo(0,0);
 
       if(props.playlists == null){
         return;
@@ -89,6 +91,7 @@ export default function CardGridView(props) {
 
     // useEffect for loading playlist music cards
     useEffect(() => {
+      window.scrollTo(0,0);
 
       if(props.playlistTracks == null){
         return;
