@@ -8,7 +8,7 @@ import { TextField } from '@material-ui/core';
 import Button from '@material-ui/core/Button';
 import Cookies from 'js-cookie';
 
-import {createPlaylist} from '../services/DBService'
+import {createPlaylist, updatePlaylistByID} from '../services/DBService'
 
 import AlertContext from '../context/AlertContext';
 import UserContext from '../context/UserContext';
@@ -69,7 +69,7 @@ export default function CreatePlaylistModal(props) {
         setPlaylistName(value.trim());
     }
 
-    const handleSave = () => {
+    const handleSave = async () => {
         // create new playlist in DB
         try{
 
@@ -93,14 +93,28 @@ export default function CreatePlaylistModal(props) {
                 return;
             }
 
-            const data = createPlaylist(username, playlistName);
-            if(data){
+            const data = await createPlaylist(username, playlistName);
+            if(data != null){
                 // alert('Playlist Created successfully');
                 
                 setCtxAlert({
                     alert: true,
                     message:'Playlist Created successfully !!!'
                 })
+            }
+
+            // Update newly created playlist with data from "withQueueList" with playlist id from "data"
+            if(props.withQueueList !== undefined && props.withQueueList !== null){
+                // console.log('Save Queue as Playlist');
+                const _playlistUpdated = await updatePlaylistByID(data, props.withQueueList);
+                if(_playlistUpdated != null) {
+                    // console.log("Updated Playlist");
+
+                    setCtxAlert({
+                        alert: true,
+                        message:'Playlist updated successfully !!!'
+                    })
+                }
             }
 
             setOpen(false);
@@ -130,6 +144,7 @@ export default function CreatePlaylistModal(props) {
             <Fade in={open}>
             <div className={classes.paper}>
                 <h2 id="transition-modal-title">Create Playlist</h2>
+                <p>{props.withQueueList!==undefined && props.withQueueList!==null ? `(${props.withQueueList.length} tracks)` : null}</p>
                 <p id="transition-modal-description">
                     <TextField id="standard-basic" label="Playlist name" value={playlistName} onChange={handleTextchange} />
                 </p>

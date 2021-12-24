@@ -7,8 +7,12 @@ import DragIndicatorIcon from '@material-ui/icons/DragIndicator';
 import { Paper } from '@material-ui/core';
 import { IconButton } from '@material-ui/core';
 import Grid from '@material-ui/core/Grid';
+import Card from '@material-ui/core/Card';
+import AddCircleOutlineIcon from '@material-ui/icons/Add';
 
 import QueueListCard from './QueueListCard';
+import CreatePlaylistModal from './CreatePlaylistModal'
+
 
 const DRAWER_DIRECTION = 'right';
 const useStyles = makeStyles((theme) => ({
@@ -62,7 +66,7 @@ const useStyles = makeStyles((theme) => ({
 
 
     topPane: {
-      height: "100%",
+      height: "100vh",
       width: "100%",
       backgroundColor: '#dddffe',
     },
@@ -70,6 +74,19 @@ const useStyles = makeStyles((theme) => ({
       position: "fixed",
       width: "100%",
       color: "white",
+    },
+
+    header: {
+      display: 'flex',
+      alignItems: 'center',
+      width: "100vw",
+      boxShadow: "0 3px 10px rgb(0 0 0 / 0.2)",
+
+      // For sticky header
+      position: 'fixed',
+      top: 0,
+      backgroundColor: '#eee',
+      zIndex: 999
     }
 
   }));
@@ -77,6 +94,7 @@ const useStyles = makeStyles((theme) => ({
 function PlayingQueue(props) {
     const classes = useStyles();
     const [list, setList] = useState(null);
+    const [openCreatePlaylistModal, setOpenCreatePlaylistModal] = useState(false);
 
     useEffect(()=>{
 
@@ -132,7 +150,14 @@ function PlayingQueue(props) {
       >
         <div className = {classes.topPane}>
           <Grid>
-            {list}
+            <Card className={classes.header}>
+              <IconButton aria-label="create quick playlist" onClick={handleCreatePlaylistFromQueue}  title="Create Quick Playlist">
+                <AddCircleOutlineIcon /> <div style={{fontSize:'17px'}}>Create Quick Playlist</div>
+              </IconButton>
+            </Card>
+            <div style={{marginTop:'50px'}}>
+              {list}
+            </div>
           </Grid>
         </div>
 
@@ -145,8 +170,13 @@ function PlayingQueue(props) {
     );
 
 
+    const handleCreatePlaylistFromQueue = () => {
+      setOpenCreatePlaylistModal(true);
+    }
 
-
+    const handleCreatePlaylistModalClose = () => {
+      setOpenCreatePlaylistModal(false);
+    }
 
     return (
         <div>
@@ -176,9 +206,11 @@ function PlayingQueue(props) {
             </Drawer>
           </React.Fragment>
 
+          <CreatePlaylistModal openModal={openCreatePlaylistModal} 
+            ModalClosed ={handleCreatePlaylistModalClose} 
+            withQueueList={props.queueList}
+          />
 
-
-            
         </div>
     )
 }

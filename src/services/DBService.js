@@ -64,9 +64,9 @@ async function createPlaylist (username, playlistName) {
     if(data != null){
         console.log('Playlist created successfully')
         Cookies.set('KXUCHANGE', '1'); // refresh cache as new playlist is created
-        return true;
+        return data[0].id;
     }else{
-        return false;
+        return null;
     }
 }
 

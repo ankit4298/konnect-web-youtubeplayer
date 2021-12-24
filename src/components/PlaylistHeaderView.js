@@ -115,6 +115,7 @@ function PlaylistHeaderView(props) {
                 <CardContent className={classes.content}>
                 <Typography component="h5" variant="h5">
                     {header.playlistName}
+                    <div style={{fontSize:'15px', paddingLeft:'2px'}}>({props.musicObj.length} Tracks)</div>
                 </Typography>
                 {/* <Typography variant="subtitle1" color="textSecondary">
                     {header.playlistSrc}
