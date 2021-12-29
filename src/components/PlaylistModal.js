@@ -7,6 +7,7 @@ import IconButton from '@material-ui/core/IconButton';
 import PlaylistAddIcon from '@material-ui/icons/PlaylistAdd';
 import Button from '@material-ui/core/Button';
 import {getPlaylistsIDName, saveToPlaylist} from '../services/DBService'
+import Grid from '@material-ui/core/Grid';
 
 const useStyles = makeStyles((theme) => ({
   modal: {
@@ -94,9 +95,20 @@ export default function PlaylistModal(props) {
         <Fade in={open}>
           <div className={classes.paper}>
             <h2 id="transition-modal-title">Playlists</h2>
-            <p>
+            {/* <p>
                {playlistCards}
-            </p>
+            </p> */}
+
+            <Grid
+              container
+              spacing={2}
+              direction="row"
+              alignItems="flex-start"
+              justifyContent="flex-start"
+              style={{ maxWidth: '90vh' }}
+            >
+              {playlistCards}
+            </Grid>
           </div>
         </Fade>
       </Modal>
