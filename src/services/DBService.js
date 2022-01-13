@@ -1,3 +1,4 @@
+import { DateRangeOutlined } from '@material-ui/icons';
 import { createClient } from '@supabase/supabase-js'
 import Cookies from 'js-cookie';
 const supabase = createClient(process.env.REACT_APP_SUPABASE_URL, process.env.REACT_APP_SUPABASE_KEY);
@@ -108,6 +109,22 @@ async function updatePlaylistByID(playlistID, musicData){
     return data;
 }
 
+async function getFeelingLuckyList(uid){
+    
+    let { data, error } = await supabase
+        .rpc('feelinglucky', {
+        uid
+    })
+
+    if (error){
+        return null;
+    }
+    else{
+        return ModelMapper(JSON.parse(data[0]["data"]));
+    }
+
+}
+
 
 //#region ------ private Functions
 
@@ -148,6 +165,21 @@ function removeFromJSONArray(obj, videoID) {
     return temp;
 }
 
+function ModelMapper(data) {
+
+    let _data = [];
+    data.forEach(e => {
+        _data.push({
+            'link' : e.videoid,
+            'title' : e.videoname,
+            'channelName' : e.channelname,
+            'thumbnail' : e.imagesrc
+        })
+    });
+
+    return _data;
+}
+
 
 //#endregion -------------------------
 
@@ -159,5 +191,6 @@ export {
     createPlaylist,
     removeFromPlaylistByID,
     removePlaylistByID,
-    updatePlaylistByID
+    updatePlaylistByID,
+    getFeelingLuckyList
 }

@@ -3,9 +3,11 @@ import YTSearch from "youtube-api-v3-search";
 import CardGridView from '../components/CardGridView';
 import SearchPanel from "../components/SearchPanel";
 
-import {getPlaylistsIDName, getPlaylistByID} from "../services/DBService";
+import {getPlaylistsIDName, getPlaylistByID, getFeelingLuckyList} from "../services/DBService";
 
 import PlaylistContext from '../context/PlaylistContext';
+
+import Cookies from "js-cookie";
 
 function IndexPanel(props) {
 
@@ -190,6 +192,21 @@ function IndexPanel(props) {
         );
     }
 
+    const handleFeelingLuckyRef = async () => {
+        // get random tracks from user's playlists
+        const uid = Cookies.get('KXUNAME');
+        const data = await getFeelingLuckyList(uid);
+        mapListToMusicCards(data);
+
+        // const FEELING_LUCKY_REF = {
+        //     "playlistID": 'X',
+        //     "playlistName": "Feeling Lucky Playlist",
+        //     "playlistSrc": "https://picsum.photos/600/400"
+        // }
+        // // console.log(data);
+        // mapPlaylistMusicToCards(data, FEELING_LUCKY_REF);
+    }
+
     return (
         <div>
 
@@ -199,6 +216,7 @@ function IndexPanel(props) {
                     keyPressRef = {searchKeyPress}
                     submitRef = {InitiateYTSearch}
                     playlistRef = {handlePlaylistRef}
+                    feelingLuckyRef = {handleFeelingLuckyRef}
                 />
             </div>
 
