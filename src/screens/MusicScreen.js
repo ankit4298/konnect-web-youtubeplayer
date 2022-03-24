@@ -173,6 +173,14 @@ export default function MusicScreen(props) {
         playTrackByPointer(_obj);
     }
 
+    const getTracksCurrentTime = () => {
+        return Math.floor(TrackPlayer.current.audio.current.currentTime);
+    }
+
+    const pausePlayer = () => {
+        TrackPlayer.current.audio.current.pause();
+    }
+
     return (
         <div>
             <div>
@@ -191,7 +199,11 @@ export default function MusicScreen(props) {
                 customAdditionalControls={
                     [
                         RHAP_UI.LOOP,
-                        <NowPlayingModal currentTrack = {currentTrack}/>
+                        <NowPlayingModal
+                            currentTrack = {currentTrack}
+                            getTracksCurrentTime = {getTracksCurrentTime}
+                            pausePlayer = {pausePlayer}
+                        />,
                     ]
                 }
             />
