@@ -25,6 +25,8 @@ export default function CardGridView(props) {
     const [playListHeaderObj, setPlayListHeaderObj] = useState([]);
     const [musicObj, setMusicObj] = useState([]);
 
+    const [afterSearchList, setAfterSearchList] = useState(null);
+
     const handleloadMedia = (musicObj) => {
         // pass parameters which needs to pass to final IndexPanel component with music Obj
         props.loadMediaRef(musicObj);
@@ -40,6 +42,7 @@ export default function CardGridView(props) {
     // useEffect for loading YT Query cards
     useEffect(() => {
         window.scrollTo(0,0);
+        setAfterSearchList(null);
 
         if(props.list == null){
           return;
@@ -65,6 +68,7 @@ export default function CardGridView(props) {
     // useEffect for loading playlists
     useEffect(() => {
       window.scrollTo(0,0);
+      setAfterSearchList(null);
 
       if(props.playlists == null){
         return;
@@ -101,8 +105,10 @@ export default function CardGridView(props) {
       setPlayListHeaderObj(props.playlistObj)
       setMusicObj(props.playlistTracks)
 
-      // set tracks card from playlist
-      setCardList(props.playlistTracks.map(item=>{
+
+      if(afterSearchList!=null){
+        // set tracks card from playlist with searched query
+        setCardList(afterSearchList.map(item=>{
           return (
               <Grid item xs={12} sm={6} md={3} lg={3} key={item.videoID}>
                   <MusicCard
@@ -119,7 +125,28 @@ export default function CardGridView(props) {
               </Grid>
           )
       }));
-    }, [props.playlistTracks, props.playlistObj])
+
+      }else{
+        // set tracks card from playlist
+        setCardList(props.playlistTracks.map(item=>{
+            return (
+                <Grid item xs={12} sm={6} md={3} lg={3} key={item.videoID}>
+                    <MusicCard
+                        key={item.videoID}
+                        id={item.videoID}
+                        name={item.videoName}
+                        src={item.imageSrc}
+                        channelName={item.channelName}
+                        loadMedia={handleloadMedia}
+                        playlistTrack={true}
+                        playlistObj={props.playlistObj}
+                        removeTrackFromPlaylist={handleRemoveTrackFromPlaylist}
+                    />
+                </Grid>
+            )
+        }));
+      }
+    }, [props.playlistTracks, props.playlistObj, afterSearchList])
 
 
     const handleRemoveTrackFromPlaylist = async (musicPlaylistObj) => {
@@ -142,6 +169,24 @@ export default function CardGridView(props) {
 
     }
 
+    const handlePlaylistSearch = (query) => {
+
+      if(query === null || query === undefined || query == ''){
+        setAfterSearchList(null);
+        return;
+      }
+
+      const pTracks = props.playlistTracks;
+      let _tracks = [];
+      pTracks.filter((e)=>{
+        if(e.videoName.toLowerCase().includes(query.toLowerCase())){
+          _tracks.push(e);
+        }
+      });
+
+      setAfterSearchList(_tracks);
+    }
+
   return (
     <div>
       {props.playlistObj === undefined ? null : (
@@ -150,6 +195,7 @@ export default function CardGridView(props) {
             musicObj={musicObj}
             playlistObj={playListHeaderObj}
             loadPlaylist={handleloadPlaylist}
+            searchInPlaylist={handlePlaylistSearch}
           />
         </Grid>
       )}

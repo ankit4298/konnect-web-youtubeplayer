@@ -7,6 +7,14 @@ import IconButton from '@material-ui/core/IconButton';
 import Typography from '@material-ui/core/Typography';
 import PlayArrowIcon from '@material-ui/icons/PlayArrow';
 
+import Input from '@material-ui/core/Input';
+import InputLabel from '@material-ui/core/InputLabel';
+import InputAdornment from '@material-ui/core/InputAdornment';
+
+import FormHelperText from '@material-ui/core/FormHelperText';
+import FormControl from '@material-ui/core/FormControl';
+
+import ClearIcon from '@material-ui/icons/Clear';
 import RemoveCircleOutlineIcon from '@material-ui/icons/RemoveCircleOutline';
 import AlertDialog from './Dialog';
 
@@ -49,6 +57,7 @@ function PlaylistHeaderView(props) {
     const [header, setHeader] = useState([]);
     const [dialogState, setDialogState] = useState(false);
     
+    const [searchQuery, setSearchQuery] = useState('');
     
     const plistContext = useContext(PlaylistContext);
     const {ctxAlert,setCtxAlert} = useContext(AlertContext);
@@ -63,6 +72,20 @@ function PlaylistHeaderView(props) {
         setHeader(props.playlistObj);
 
     },[props.playlistObj])
+
+    const handlePlaylistSearchChange = (e) => {
+      const { name, value } = e.target;
+      setSearchQuery(value);
+
+      if(value.length > 2 || value.length == 0){ 
+        props.searchInPlaylist(value);
+      }
+    }
+
+    const clearSearchQuery = () => {
+      setSearchQuery('');
+      props.searchInPlaylist(null);
+    }
 
     const handleQueuePlaylist = () => {
       const playlistObj ={
@@ -132,6 +155,27 @@ function PlaylistHeaderView(props) {
                     <RemoveCircleOutlineIcon style={{color:'#ee0000'}} className={classes.Icon} />
                 </IconButton>
 
+                <FormControl>
+                  <InputLabel htmlFor="standard-adornment-Search">Search</InputLabel>
+                  <Input
+                    id="standard-adornment-password"
+                    type="text"
+                    value={searchQuery}
+                    onChange={handlePlaylistSearchChange}
+                    endAdornment={
+                      <InputAdornment position="end">
+                        { searchQuery!=null && searchQuery!=undefined && searchQuery!='' ? 
+                          <IconButton
+                            aria-label="clear serch query input"
+                            onClick={clearSearchQuery}
+                          >
+                            <ClearIcon/>
+                          </IconButton>
+                        : null }
+                      </InputAdornment>
+                    }
+                  />
+                </FormControl>
                 </div>
             </div>
 
