@@ -1,8 +1,10 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import InputBase from '@material-ui/core/InputBase';
 import IconButton from '@material-ui/core/IconButton';
 import SearchIcon from '@material-ui/icons/Search';
+import JoinRoomIcon from '@material-ui/icons/People';
+import LeaveRoomIcon from '@material-ui/icons/Input';
 import PlaylistAddCheckIcon from '@material-ui/icons/PlaylistAddCheck';
 
 import SettingsModal from './SettingsModal';
@@ -37,6 +39,16 @@ const useStyles = makeStyles((theme) => ({
 
 export default function SearchPanel(props) {
   const classes = useStyles();
+  const [roomJoined, setRoomJoined] = useState(false);
+
+  useEffect(() => {
+    if(props == null)
+      return;
+
+    if(props.roomJoined != null)
+      setRoomJoined(props.roomJoined);
+  }, [props.roomJoined])
+  
 
   return (
     <div component="form" className={classes.root}>
@@ -54,14 +66,31 @@ export default function SearchPanel(props) {
       />
       
       <SettingsModal/>
+      {
+        roomJoined == false ?
+        <>
+          <IconButton className={classes.iconButton} aria-label="search" onClick={props.playlistRef}>
+            <PlaylistAddCheckIcon />
+          </IconButton>
 
-      <IconButton className={classes.iconButton} aria-label="search" onClick={props.playlistRef}>
-        <PlaylistAddCheckIcon />
+          <IconButton className={classes.iconButton} aria-label="search" onClick={props.submitRef}>
+            <SearchIcon />
+          </IconButton>
+        </>
+        :
+        null
+      }
+      
+      <IconButton className={classes.iconButton} aria-label="join" onClick={props.joinRoomRef}>
+        {
+          roomJoined == false ? <JoinRoomIcon/> : <LeaveRoomIcon/>
+        }
       </IconButton>
 
-      <IconButton className={classes.iconButton} aria-label="search" onClick={props.submitRef}>
-        <SearchIcon />
+      <IconButton className={classes.iconButton} aria-label="debug" onClick={props.debugRef}>
+      <JoinRoomIcon/>
       </IconButton>
+
     </div>
   );
 }

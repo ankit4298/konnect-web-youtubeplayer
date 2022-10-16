@@ -1,20 +1,68 @@
 import React, { useState, useEffect, useContext } from 'react'
+
+import {externalSocket} from '../services/SocketService.js'
+
 import YTSearch from "youtube-api-v3-search";
 import CardGridView from '../components/CardGridView';
 import SearchPanel from "../components/SearchPanel";
 
 import {getPlaylistsIDName, getPlaylistByID} from "../services/DBService";
-
 import PlaylistContext from '../context/PlaylistContext';
 
-function IndexPanel(props) {
 
+
+function IndexPanel(props) {
+    
+    
     const APIKEY = process.env.REACT_APP_YTAPIKEY;
 
     const plistContext = useContext(PlaylistContext);
 
     const [Query, setQuery] = useState('');
     const [videoCards, setVideoCards] =useState([]);
+    const [roomJoined, setRoomJoined] =useState(false);
+    const [socket, setSocket] =useState(null);
+
+    useEffect(() => {
+        setSocket(externalSocket.socket);
+    }, [])
+    
+
+    useEffect(()=>{
+    if(socket!=null){
+
+        socket.off('disconnect')
+        socket.on('disconnect', () => {
+            console.log("disconnect")
+            socket.open();
+            socket.emit('new user', 'DEBUG_USERNAME' ,function(data){
+                console.log('in callback...');
+            })
+        
+            // this socket is fired on joining new room / existing room
+            socket.emit('new room', '1234', function(data) {
+                
+                // This should only call back if the client is the host
+                if (data) {
+                    console.log("Host is syncing the new socket!");
+                }
+            });
+        
+        });
+
+
+        // Update Peoples List when new user joins
+        // socket.off('updatePeoplesList')
+        socket.off('updatePeoplesList')
+        socket.on('updatePeoplesList', function(data) {
+            console.log('new one joined...')
+            // this.getRoomDetails();
+        });
+    }
+        
+    }, [])
+
+
 
     useEffect(() => {
         if(plistContext.ctxRefreshPlaylist == null){
@@ -190,6 +238,45 @@ function IndexPanel(props) {
         );
     }
 
+    const handleJoinRoomRef = async () => {
+
+        if(!roomJoined){
+            var roomNo = prompt('Enter room no')
+            console.log(roomNo);
+            setRoomJoined(true);
+        
+            console.log("joining room")
+
+            // this socket is fired on joining new room / existing room
+            socket.emit('new user','DEBUG_User'+Date.now().toString(),function(data){
+                console.log('in callback...');
+            })
+
+            // this socket is fired on joining new room / existing room
+            socket.emit('new room', '1234', function(data) {
+                console.log("How many Times emitted?");
+                // This should only call back if the client is the host
+                if (data) {
+                    console.log("Host is syncing the new socket!");
+                }
+            });
+
+        }
+        else{
+            setRoomJoined(false);
+
+            socket.emit('forceDisconnect');
+        }
+        
+
+    }
+
+    const handleDebugRef = () => {
+        console.log('debug');
+        console.log(socket.id)
+        socket.emit('connectedStatus','123',(e)=>console.log(e));
+    }
+
     return (
         <div>
 
@@ -199,6 +286,9 @@ function IndexPanel(props) {
                     keyPressRef = {searchKeyPress}
                     submitRef = {InitiateYTSearch}
                     playlistRef = {handlePlaylistRef}
+                    joinRoomRef = {handleJoinRoomRef}
+                    roomJoined = {roomJoined}
+                    debugRef = {handleDebugRef}
                 />
             </div>
 
