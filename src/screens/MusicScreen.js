@@ -181,6 +181,12 @@ export default function MusicScreen(props) {
         TrackPlayer.current.audio.current.pause();
     }
 
+    const resumePlayer = (ts) => {
+        // play from the paused time of the video
+        TrackPlayer.current.audio.current.currentTime = ts;
+        TrackPlayer.current.audio.current.play();
+    }
+
     return (
         <div>
             <div>
@@ -203,6 +209,7 @@ export default function MusicScreen(props) {
                             currentTrack = {currentTrack}
                             getTracksCurrentTime = {getTracksCurrentTime}
                             pausePlayer = {pausePlayer}
+                            resumePlayer = {resumePlayer}
                         />,
                     ]
                 }

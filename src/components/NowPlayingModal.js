@@ -152,11 +152,42 @@ export default function NowPlayingModal(props) {
       },
     };
 
-    return <YouTube videoId={nowPlaying.videoID} opts={opts} onPause={func} ref={YTEmbedPlayer}/>;
+    return (
+      <div style={{backgroundColor:'#eeeeee', width:'410px'}}>
+        {/* TODO: add support to close video player and switch back to audio */}
+        <div style={{textAlign:'center'}}>
+          <table>
+            <tbody>
+              <tr>
+                <td>
+                  Player control wont work, use below YT controls for video
+                </td>
+                <td>
+                  <button onClick={closePlayer}>X</button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <YouTube videoId={nowPlaying.videoID} opts={opts} onPause={pauseVideo} onEnd={EndVideo} ref={YTEmbedPlayer}/>
+      </div>
+    )
+  }
+  const pauseVideo = (event) => {
+    /* TODO: remove below logic -> currently handled switch from video to audio on pause */
+    console.log(event.target.playerInfo.currentTime)
+    props.resumePlayer(event.target.playerInfo.currentTime);
+    setShowVideo(false);
   }
 
-  const func = (data) => {
-    console.log(data.target.playerInfo.currentTime)
+  const EndVideo = (event) => {
+    props.resumePlayer(event.target.playerInfo.currentTime);
+    setShowVideo(false);
+  }
+
+  const closePlayer = () => {
+    console.log(YTEmbedPlayer)
+    // console.log(data.target.playerInfo.currentTime)
   }
 
   return (
