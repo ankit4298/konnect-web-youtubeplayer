@@ -183,6 +183,8 @@ export default function MusicScreen(props) {
 
     const resumePlayer = (ts) => {
         // play from the paused time of the video
+        console.log('Music player resumed from: ',ts);
+
         TrackPlayer.current.audio.current.currentTime = ts;
         TrackPlayer.current.audio.current.play();
     }

@@ -34,6 +34,13 @@ const useStyles = makeStyles((theme) => ({
   cover: {
     width: '100px',
   },
+  closeBtn: {
+    width:'25px',
+    height:'25px',
+    borderRadius:'25px',
+    backgroundColor:'red',
+    cursor:'pointer'
+  }
 }));
 
 export default function NowPlayingModal(props) {
@@ -153,17 +160,16 @@ export default function NowPlayingModal(props) {
     };
 
     return (
-      <div style={{backgroundColor:'#eeeeee', width:'410px'}}>
-        {/* TODO: add support to close video player and switch back to audio */}
+      <div style={{backgroundColor:'black', color:'white', width:'410px'}}>
         <div style={{textAlign:'center'}}>
-          <table>
+          <table style={{width:'100%'}}>
             <tbody>
               <tr>
                 <td>
-                  Player control wont work, use below YT controls for video
+                  Player control wont work, use below YT controls
                 </td>
-                <td>
-                  <button onClick={closePlayer}>X</button>
+                <td style={{float:'right'}}>
+                  <div className={classes.closeBtn} onClick={closePlayer}>X</div>
                 </td>
               </tr>
             </tbody>
@@ -174,10 +180,7 @@ export default function NowPlayingModal(props) {
     )
   }
   const pauseVideo = (event) => {
-    /* TODO: remove below logic -> currently handled switch from video to audio on pause */
-    console.log(event.target.playerInfo.currentTime)
-    props.resumePlayer(event.target.playerInfo.currentTime);
-    setShowVideo(false);
+
   }
 
   const EndVideo = (event) => {
@@ -185,9 +188,13 @@ export default function NowPlayingModal(props) {
     setShowVideo(false);
   }
 
-  const closePlayer = () => {
-    console.log(YTEmbedPlayer)
-    // console.log(data.target.playerInfo.currentTime)
+  const closePlayer = async () => {
+    // returs current time as promise from iframe
+    const timePromise = YTEmbedPlayer.current.getInternalPlayer().getCurrentTime();
+    timePromise.then((currentTime)=>{
+      props.resumePlayer(currentTime);
+      setShowVideo(false);
+    })
   }
 
   return (
